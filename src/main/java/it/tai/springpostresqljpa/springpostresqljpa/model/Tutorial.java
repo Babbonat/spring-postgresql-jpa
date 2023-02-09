@@ -4,8 +4,6 @@ package it.tai.springpostresqljpa.springpostresqljpa.model;
 
 import jakarta.persistence.*;
 
-import java.awt.*;
-
 @Entity                                             //persistent java class
 @Table(name = "tutorials")                          //annotation provides the table that maps this entity
 public class Tutorial
@@ -33,10 +31,6 @@ public class Tutorial
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getTitle() {
