@@ -3,6 +3,8 @@ package it.tai.springpostresqljpa.springpostresqljpa.controller;
 import it.tai.springpostresqljpa.springpostresqljpa.model.Tutorial;
 import it.tai.springpostresqljpa.springpostresqljpa.repository.TutorialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +25,10 @@ public class TutorialController
         try
         {
             List<Tutorial> tutorials = new ArrayList<>();
+            //Order order = new Order(Sort.Direction.ASC, "id");
             if (title == null)
-                tutorialRepository.findAllByOrderByIdAsc().forEach(tutorials::add);
+                tutorialRepository.findAll(Sort.by("id")).forEach(tutorials::add);
+                //tutorialRepository.findAll(Sort.by(order)).forEach(tutorials::add);
             else
                 tutorialRepository.findByTitleContaining(title).forEach(tutorials::add);
             if(tutorials.isEmpty())
