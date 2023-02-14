@@ -17,19 +17,6 @@ public class TutorialController
     @Autowired
     TutorialRepository tutorialRepository;
 
-    class TutorialsIdComparator implements Comparator<Tutorial> {
-        // override the compare() method
-        public int compare(Tutorial t1, Tutorial t2)
-        {
-            if (t1.getId() == t2.getId())
-                return 0;
-            else if (t1.getId() > t2.getId())
-                return 1;
-            else
-                return -1;
-        }
-    }
-
     @GetMapping("/tutorials")
     public ResponseEntity<List<Tutorial>> getAllTutorials(@RequestParam(required = false) String title)
     {
