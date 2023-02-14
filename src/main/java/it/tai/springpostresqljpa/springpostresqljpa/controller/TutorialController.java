@@ -2,6 +2,7 @@ package it.tai.springpostresqljpa.springpostresqljpa.controller;
 
 import it.tai.springpostresqljpa.springpostresqljpa.exceptions.ResourceNotFoundException;
 import it.tai.springpostresqljpa.springpostresqljpa.model.Tutorial;
+import it.tai.springpostresqljpa.springpostresqljpa.repository.TutorialDetailsRepository;
 import it.tai.springpostresqljpa.springpostresqljpa.repository.TutorialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -13,12 +14,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 //rest controller che fa il request mapping dei metodi per restful request
+@CrossOrigin(origins="*")
 @RestController
 @RequestMapping("/api")
 public class TutorialController
 {
     @Autowired
     TutorialRepository tutorialRepository;
+    @Autowired
+    TutorialDetailsRepository tutorialDetailsRepository;
 
     @GetMapping("/tutorials")
     public ResponseEntity<List<Tutorial>> getAllTutorials(@RequestParam(required = false) String title)

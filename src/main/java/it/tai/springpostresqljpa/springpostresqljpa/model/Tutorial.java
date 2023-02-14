@@ -2,8 +2,9 @@ package it.tai.springpostresqljpa.springpostresqljpa.model;
 //data model class
 //corrisponde a entità e tabelle
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity                                             //persistent java class
 @Table(name = "tutorials")                          //annotation provides the table that maps this entity
 public class Tutorial
