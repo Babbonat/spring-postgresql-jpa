@@ -1,5 +1,6 @@
 package it.tai.springpostresqljpa.springpostresqljpa.controller;
 
+import it.tai.springpostresqljpa.springpostresqljpa.exceptions.ResourceNotFoundException;
 import it.tai.springpostresqljpa.springpostresqljpa.model.Tutorial;
 import it.tai.springpostresqljpa.springpostresqljpa.repository.TutorialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,31 +23,23 @@ public class TutorialController
     @GetMapping("/tutorials")
     public ResponseEntity<List<Tutorial>> getAllTutorials(@RequestParam(required = false) String title)
     {
-        try
-        {
-            List<Tutorial> tutorials = new ArrayList<>();
-            //Order order = new Order(Sort.Direction.ASC, "id");
-            if (title == null)
-                tutorialRepository.findAll(Sort.by("id")).forEach(tutorials::add);
-                //tutorialRepository.findAll(Sort.by(order)).forEach(tutorials::add);
-            else
-                tutorialRepository.findByTitleContaining(title).forEach(tutorials::add);
-            if(tutorials.isEmpty())
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            return new ResponseEntity<>(tutorials, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        List<Tutorial> tutorials = new ArrayList<>();
+        //Order order = new Order(Sort.Direction.ASC, "id");
+        if (title == null)
+            tutorialRepository.findAll(Sort.by("id")).forEach(tutorials::add);
+        //tutorialRepository.findAll(Sort.by(order)).forEach(tutorials::add);
+        else
+            tutorialRepository.findByTitleContaining(title).forEach(tutorials::add);
+        if(tutorials.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(tutorials, HttpStatus.OK);
     }
 
     @GetMapping("/tutorials/{id}")
     public ResponseEntity<Tutorial> getTutorialById(@PathVariable("id") long id)
     {
-        Optional<Tutorial> tutorialData = tutorialRepository.findById(id);
-        if(tutorialData.isPresent())
-            return new ResponseEntity<>(tutorialData.get(), HttpStatus.OK);
-        else
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Tutorial t = tutorialRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id = " + id));
+        return new ResponseEntity<>(t, HttpStatus.CREATED);
     }
 
     @PostMapping("/tutorials")
@@ -64,50 +57,31 @@ public class TutorialController
     @PutMapping("/tutorials/{id}")
     public ResponseEntity<Tutorial> updateTutorial(@PathVariable("id") long id, @RequestBody Tutorial tutorial)
     {
-        Optional<Tutorial> tutorialData = tutorialRepository.findById(id);
-        if(tutorialData.isPresent())
-        {
-            Tutorial t = tutorialData.get();
-            t.setTitle(tutorial.getTitle());
-            t.setDescription(tutorial.getDescription());
-            t.setPublished(tutorial.isPublished());
-            return new ResponseEntity<>(tutorialRepository.save(t), HttpStatus.OK);
-        }
-        else
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Tutorial t = tutorialRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id = " + id));
+        t.setTitle(tutorial.getTitle());
+        t.setDescription(tutorial.getDescription());
+        t.setPublished(tutorial.isPublished());
+        return new ResponseEntity<>(tutorialRepository.save(t), HttpStatus.OK);
     }
 
     @DeleteMapping("/tutorials/{id}")
     public ResponseEntity<HttpStatus> deleteTutorial(@PathVariable("id") long id) {
-        try {
-            tutorialRepository.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        tutorialRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/tutorials")
     public ResponseEntity<HttpStatus> deleteAllTutorials() {
-        try {
-            tutorialRepository.deleteAll();
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        tutorialRepository.deleteAll();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/tutorials/published")
     public ResponseEntity<List<Tutorial>> findByPublished() {
-        try {
-            List<Tutorial> tutorials = tutorialRepository.findByPublished(true);
-
-            if (tutorials.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(tutorials, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        List<Tutorial> tutorials = tutorialRepository.findByPublished(true);
+        if (tutorials.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        return new ResponseEntity<>(tutorials, HttpStatus.OK);
     }
 }
