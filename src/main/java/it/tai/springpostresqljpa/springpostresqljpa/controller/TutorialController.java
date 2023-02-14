@@ -7,9 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 //rest controller che fa il request mapping dei metodi per restful request
 @RestController
@@ -19,6 +17,19 @@ public class TutorialController
     @Autowired
     TutorialRepository tutorialRepository;
 
+    class TutorialsIdComparator implements Comparator<Tutorial> {
+        // override the compare() method
+        public int compare(Tutorial t1, Tutorial t2)
+        {
+            if (t1.getId() == t2.getId())
+                return 0;
+            else if (t1.getId() > t2.getId())
+                return 1;
+            else
+                return -1;
+        }
+    }
+
     @GetMapping("/tutorials")
     public ResponseEntity<List<Tutorial>> getAllTutorials(@RequestParam(required = false) String title)
     {
@@ -26,7 +37,7 @@ public class TutorialController
         {
             List<Tutorial> tutorials = new ArrayList<>();
             if (title == null)
-                tutorialRepository.findAll().forEach(tutorials::add);
+                tutorialRepository.findAllByOrderByIdAsc().forEach(tutorials::add);
             else
                 tutorialRepository.findByTitleContaining(title).forEach(tutorials::add);
             if(tutorials.isEmpty())
