@@ -1,7 +1,6 @@
 package it.tai.springpostresqljpa.springpostresqljpa.controller;
 
 import it.tai.springpostresqljpa.springpostresqljpa.exceptions.ResourceNotFoundException;
-import it.tai.springpostresqljpa.springpostresqljpa.model.TestResponse;
 import it.tai.springpostresqljpa.springpostresqljpa.model.Tutorial;
 import it.tai.springpostresqljpa.springpostresqljpa.model.TutorialDetails;
 import it.tai.springpostresqljpa.springpostresqljpa.repository.TutorialDetailsRepository;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.Optional;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -26,15 +24,15 @@ public class TutorialDetailsController
     @GetMapping({"/details/{id}", "/tutorials/{id}/details"})
     public ResponseEntity<TutorialDetails> getDetailsById(@PathVariable(value = "id") long id)
     {
-        //TutorialDetails details = detailsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found TutotialDetails with id "+id));
-        Optional<TutorialDetails> opt = detailsRepository.findById(id);
+        TutorialDetails details = detailsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found TutotialDetails with id "+id));
+        return new ResponseEntity<>(details, HttpStatus.OK);
+        /*Optional<TutorialDetails> opt = detailsRepository.findById(id);
         if(opt.isEmpty())
             throw new ResourceNotFoundException("Not found TutotialDetails with id "+id);
         else {
             TutorialDetails details = opt.get();
             return new ResponseEntity<>(details, HttpStatus.OK);
-            //return new ResponseEntity<>(new TestResponse(), HttpStatus.OK);
-        }
+        }*/
     }
     @PostMapping("/tutorials/{tutorialId}/details")
     public ResponseEntity<TutorialDetails> createDetails(@PathVariable(value = "tutorialId") Long tutorialId,

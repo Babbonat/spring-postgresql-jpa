@@ -12,10 +12,12 @@ import org.hibernate.annotations.OnDeleteAction;
 public class Comment
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comment_generator")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Lob
+
+    @Column(name = "content")
     private String content;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "tutorial_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
