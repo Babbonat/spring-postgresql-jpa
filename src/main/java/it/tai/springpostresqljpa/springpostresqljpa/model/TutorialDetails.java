@@ -10,6 +10,7 @@ import java.util.Date;
 public class TutorialDetails
 {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @Column
     private Date createdOn;
