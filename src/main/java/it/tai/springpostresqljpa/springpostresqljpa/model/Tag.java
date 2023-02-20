@@ -17,6 +17,7 @@ public class Tag
     private long id;
 
     @Column(name = "name")
+    //deve essere unique
     private String name;
 
     //non-owning side. Dobbiamo usare "mappedBy" per specificare il campo che lega Tag al Tutorial
@@ -27,10 +28,5 @@ public class Tag
     public Tag()
     {
 
-    }
-
-    public Tag(long id, String name) {
-        this.id = id;
-        this.name = name;
     }
 }

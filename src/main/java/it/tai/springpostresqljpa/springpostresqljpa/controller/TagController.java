@@ -5,6 +5,7 @@ import it.tai.springpostresqljpa.springpostresqljpa.model.Tag;
 import it.tai.springpostresqljpa.springpostresqljpa.model.Tutorial;
 import it.tai.springpostresqljpa.springpostresqljpa.repository.TagRepository;
 import it.tai.springpostresqljpa.springpostresqljpa.repository.TutorialRepository;
+import it.tai.springpostresqljpa.springpostresqljpa.services.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
@@ -23,6 +25,9 @@ public class TagController
 
     @Autowired
     private TagRepository tagRepository;
+
+    @Autowired
+    private TagService tagService;
 
     @GetMapping("/tags")
     public ResponseEntity<List<Tag>> getAllTags()
@@ -59,11 +64,14 @@ public class TagController
         return new ResponseEntity<>(tutorials, HttpStatus.OK);
     }
 
-    @PostMapping("/tutorials/{tutorialId}/tags")
-    public ResponseEntity<Tag> addTag(@PathVariable(value = "tutoiralId") long tutorialId,
-                                      @RequestBody Tag tagRequest)
+    @PostMapping("/tutorials/{tutorialId}/tags/{tagName}")
+    public ResponseEntity addTag(@PathVariable(value = "tutorialId") long tutorialId,
+                                 @PathVariable(value = "tagName") String tagName)
     {
-        Tag tag = tutorialRepository.findById(tutorialId).map(tutorial -> {
+        this.tagService.tagTutorial(tutorialId, tagName);
+        return ResponseEntity.ok().build();
+
+        /*Tag tag = tutorialRepository.findById(tutorialId).map(tutorial -> {
             long tagId = tagRequest.getId();
             if(tagId != 0L)     //tag esiste
             {
@@ -75,7 +83,7 @@ public class TagController
             tutorial.addTag(tagRequest);
             return tagRepository.save(tagRequest);
         }).orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id = "+ tutorialId));
-        return new ResponseEntity<>(tag, HttpStatus.CREATED);
+        return new ResponseEntity<>(tag, HttpStatus.CREATED);*/
     }
 
     @PutMapping("/tags/{id}")
