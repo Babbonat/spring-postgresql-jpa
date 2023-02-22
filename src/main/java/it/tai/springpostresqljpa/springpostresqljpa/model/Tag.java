@@ -2,12 +2,15 @@ package it.tai.springpostresqljpa.springpostresqljpa.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Setter
+@Getter
+@AllArgsConstructor
+@ToString
 @Entity
 @Table(name = "tags")
 public class Tag

@@ -2,7 +2,9 @@ package it.tai.springpostresqljpa.springpostresqljpa.model;
 //data model class
 //corrisponde a entità e tabelle
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
