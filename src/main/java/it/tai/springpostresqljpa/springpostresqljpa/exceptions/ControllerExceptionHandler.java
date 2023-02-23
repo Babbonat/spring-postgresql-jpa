@@ -22,7 +22,14 @@ public class ControllerExceptionHandler
         return new ErrorMessage(HttpStatus.NOT_FOUND.value(), new Date(), ex.getMessage(), request.getDescription(false));
     }
 
-   @ExceptionHandler(Exception.class)
+    @ExceptionHandler(BadParameterException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorMessage badParameterException(BadParameterException ex, WebRequest request)
+    {
+        return new ErrorMessage(HttpStatus.BAD_REQUEST.value(), new Date(), ex.getMessage(), request.getDescription(false));
+    }
+
+    @ExceptionHandler(Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorMessage globalExceptionHandler(Exception ex, WebRequest request) {
         this.log.error(String.format("request: %s, exception: %s", request.getDescription(false), ex.getMessage()), ex);

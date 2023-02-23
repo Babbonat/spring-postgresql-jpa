@@ -1,4 +1,4 @@
-package it.tai.springpostresqljpa.springpostresqljpa.model;
+package it.tai.springpostresqljpa.springpostresqljpa.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -9,7 +9,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Data
 @Entity
 @Table(name = "comments")
-public class Comment
+public class CommentEntity
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,7 +22,8 @@ public class Comment
     @JoinColumn(name = "tutorial_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private Tutorial tutorial;
+    private TutorialEntity tutorial;
+
 
     /*Now we can see the pros of @ManyToOne annotation.
         – With @OneToMany, we need to declare a collection inside parent class,

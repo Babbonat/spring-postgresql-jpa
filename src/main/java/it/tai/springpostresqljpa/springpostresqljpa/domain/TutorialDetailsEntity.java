@@ -1,4 +1,4 @@
-package it.tai.springpostresqljpa.springpostresqljpa.model;
+package it.tai.springpostresqljpa.springpostresqljpa.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -7,7 +7,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "tutorial_details")
-public class TutorialDetails
+public class TutorialDetailsEntity
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,14 +19,14 @@ public class TutorialDetails
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "tutorial_id")
-    private Tutorial tutorial;
+    private TutorialEntity tutorialEntity;
 
-    public TutorialDetails()
+    public TutorialDetailsEntity()
     {
 
     }
 
-    public TutorialDetails(String createdBy) {
+    public TutorialDetailsEntity(String createdBy) {
         this.createdOn = new Date();
         this.createdBy = createdBy;
     }

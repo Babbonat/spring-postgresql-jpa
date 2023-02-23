@@ -1,12 +1,13 @@
 package it.tai.springpostresqljpa.springpostresqljpa.controller;
 
 import it.tai.springpostresqljpa.springpostresqljpa.exceptions.ResourceNotFoundException;
-import it.tai.springpostresqljpa.springpostresqljpa.model.Tutorial;
-import it.tai.springpostresqljpa.springpostresqljpa.repository.TutorialDetailsRepository;
+import it.tai.springpostresqljpa.springpostresqljpa.domain.TutorialEntity;
 import it.tai.springpostresqljpa.springpostresqljpa.repository.TutorialRepository;
+import it.tai.springpostresqljpa.springpostresqljpa.services.TutorialService;
+import it.tai.springpostresqljpa.springpostresqljpa.services.dto.CreateTutorialRequestDTO;
+import it.tai.springpostresqljpa.springpostresqljpa.services.dto.CreateTutorialResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,50 +22,54 @@ public class TutorialController
 {
     @Autowired
     TutorialRepository tutorialRepository;
+
     @Autowired
-    TutorialDetailsRepository tutorialDetailsRepository;
+    TutorialService tutorialService;
 
     @GetMapping("/tutorials")
-    public ResponseEntity<List<Tutorial>> getAllTutorials(@RequestParam(required = false) String title)
+    public ResponseEntity<List<TutorialEntity>> getAllTutorials(@RequestParam(required = false) String title)
     {
-        List<Tutorial> tutorials = new ArrayList<>();
+        List<TutorialEntity> tutorialEntities = new ArrayList<>();
         //Order order = new Order(Sort.Direction.ASC, "id");
         if (title == null)
-            tutorialRepository.findAll(Sort.by("id")).forEach(tutorials::add);
+            tutorialRepository.findAll(Sort.by("id")).forEach(tutorialEntities::add);
         //tutorialRepository.findAll(Sort.by(order)).forEach(tutorials::add);
         else
-            tutorialRepository.findByTitleContaining(title).forEach(tutorials::add);
-        if(tutorials.isEmpty())
+            tutorialRepository.findByTitleContaining(title).forEach(tutorialEntities::add);
+        if(tutorialEntities.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(tutorials, HttpStatus.OK);
+        return new ResponseEntity<>(tutorialEntities, HttpStatus.OK);
     }
 
     @GetMapping("/tutorials/{id}")
-    public ResponseEntity<Tutorial> getTutorialById(@PathVariable("id") long id)
+    public ResponseEntity<TutorialEntity> getTutorialById(@PathVariable("id") long id)
     {
-        Tutorial t = tutorialRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id = " + id));
+        TutorialEntity t = tutorialRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id = " + id));
         return new ResponseEntity<>(t, HttpStatus.CREATED);
     }
 
     @PostMapping("/tutorials")
-    public ResponseEntity<Tutorial> createTutorial(@RequestBody Tutorial tutorial)
+    public ResponseEntity<CreateTutorialResponseDTO> createTutorial(@RequestBody CreateTutorialRequestDTO request)
     {
-        try
+        CreateTutorialResponseDTO response = this.tutorialService.createTutorial(request);
+        return ResponseEntity.ok(response);
+
+        /*try
         {
-            Tutorial t = tutorialRepository.save(new Tutorial(tutorial.getTitle(), tutorial.getDescription(),false));
+            TutorialEntity t = tutorialRepository.save(new TutorialEntity(tutorialEntity.getTitle(), tutorialEntity.getDescription(),false));
             return new ResponseEntity<>(t, HttpStatus.CREATED);
          } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        }*/
     }
 
     @PutMapping("/tutorials/{id}")
-    public ResponseEntity<Tutorial> updateTutorial(@PathVariable("id") long id, @RequestBody Tutorial tutorial)
+    public ResponseEntity<TutorialEntity> updateTutorial(@PathVariable("id") long id, @RequestBody TutorialEntity tutorialEntity)
     {
-        Tutorial t = tutorialRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id = " + id));
-        t.setTitle(tutorial.getTitle());
-        t.setDescription(tutorial.getDescription());
-        t.setPublished(tutorial.isPublished());
+        TutorialEntity t = tutorialRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id = " + id));
+        t.setTitle(tutorialEntity.getTitle());
+        t.setDescription(tutorialEntity.getDescription());
+        t.setPublished(tutorialEntity.isPublished());
         return new ResponseEntity<>(tutorialRepository.save(t), HttpStatus.OK);
     }
 
@@ -81,11 +86,11 @@ public class TutorialController
     }
 
     @GetMapping("/tutorials/published")
-    public ResponseEntity<List<Tutorial>> findByPublished() {
-        List<Tutorial> tutorials = tutorialRepository.findByPublished(true);
-        if (tutorials.isEmpty()) {
+    public ResponseEntity<List<TutorialEntity>> findByPublished() {
+        List<TutorialEntity> tutorialEntities = tutorialRepository.findByPublished(true);
+        if (tutorialEntities.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(tutorials, HttpStatus.OK);
+        return new ResponseEntity<>(tutorialEntities, HttpStatus.OK);
     }
 }

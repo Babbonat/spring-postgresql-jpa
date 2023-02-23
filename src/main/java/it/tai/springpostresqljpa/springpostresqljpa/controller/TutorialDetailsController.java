@@ -1,8 +1,8 @@
 package it.tai.springpostresqljpa.springpostresqljpa.controller;
 
 import it.tai.springpostresqljpa.springpostresqljpa.exceptions.ResourceNotFoundException;
-import it.tai.springpostresqljpa.springpostresqljpa.model.Tutorial;
-import it.tai.springpostresqljpa.springpostresqljpa.model.TutorialDetails;
+import it.tai.springpostresqljpa.springpostresqljpa.domain.TutorialEntity;
+import it.tai.springpostresqljpa.springpostresqljpa.domain.TutorialDetailsEntity;
 import it.tai.springpostresqljpa.springpostresqljpa.repository.TutorialDetailsRepository;
 import it.tai.springpostresqljpa.springpostresqljpa.repository.TutorialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +22,9 @@ public class TutorialDetailsController
     @Autowired
     private TutorialRepository tutorialRepository;
     @GetMapping({"/details/{id}", "/tutorials/{id}/details"})
-    public ResponseEntity<TutorialDetails> getDetailsById(@PathVariable(value = "id") long id)
+    public ResponseEntity<TutorialDetailsEntity> getDetailsById(@PathVariable(value = "id") long id)
     {
-        TutorialDetails details = detailsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found TutotialDetails with id "+id));
+        TutorialDetailsEntity details = detailsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found TutotialDetails with id "+id));
         return new ResponseEntity<>(details, HttpStatus.OK);
         /*Optional<TutorialDetails> opt = detailsRepository.findById(id);
         if(opt.isEmpty())
@@ -35,21 +35,21 @@ public class TutorialDetailsController
         }*/
     }
     @PostMapping("/tutorials/{tutorialId}/details")
-    public ResponseEntity<TutorialDetails> createDetails(@PathVariable(value = "tutorialId") Long tutorialId,
-                                                         @RequestBody TutorialDetails detailsRequest)
+    public ResponseEntity<TutorialDetailsEntity> createDetails(@PathVariable(value = "tutorialId") Long tutorialId,
+                                                               @RequestBody TutorialDetailsEntity detailsRequest)
     {
-        Tutorial t = tutorialRepository.findById(tutorialId).orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id "+ tutorialId));
+        TutorialEntity t = tutorialRepository.findById(tutorialId).orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id "+ tutorialId));
         detailsRequest.setCreatedOn(new Date());
-        detailsRequest.setTutorial(t);
-        TutorialDetails details = detailsRepository.save(detailsRequest);
+        detailsRequest.setTutorialEntity(t);
+        TutorialDetailsEntity details = detailsRepository.save(detailsRequest);
         return new ResponseEntity<>(details, HttpStatus.CREATED);
     }
 
     @PutMapping("/details/{id}")
-    public ResponseEntity<TutorialDetails> updateDetails(@PathVariable("id") long id,
-                                                         @RequestBody TutorialDetails detailsRequest)
+    public ResponseEntity<TutorialDetailsEntity> updateDetails(@PathVariable("id") long id,
+                                                               @RequestBody TutorialDetailsEntity detailsRequest)
     {
-        TutorialDetails details = detailsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Id "+id+" not found"));
+        TutorialDetailsEntity details = detailsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Id "+id+" not found"));
         details.setCreatedBy(detailsRequest.getCreatedBy());
         return new ResponseEntity<>(detailsRepository.save(details), HttpStatus.OK);
     }
@@ -62,7 +62,7 @@ public class TutorialDetailsController
     }
 
     @DeleteMapping("/tutorials/{tutorialId}/details")
-    public ResponseEntity<TutorialDetails> deleteDetailsOfTutorial(@PathVariable(value = "tutorialId") long tutorialId)
+    public ResponseEntity<TutorialDetailsEntity> deleteDetailsOfTutorial(@PathVariable(value = "tutorialId") long tutorialId)
     {
         if(!tutorialRepository.existsById(tutorialId))
             throw new ResourceNotFoundException("Not found Tutorial with id "+tutorialId);

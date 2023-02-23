@@ -1,8 +1,7 @@
 package it.tai.springpostresqljpa.springpostresqljpa.controller;
 
-import it.tai.springpostresqljpa.springpostresqljpa.exceptions.ResourceNotFoundException;
-import it.tai.springpostresqljpa.springpostresqljpa.model.Tag;
-import it.tai.springpostresqljpa.springpostresqljpa.model.Tutorial;
+import it.tai.springpostresqljpa.springpostresqljpa.domain.TagEntity;
+import it.tai.springpostresqljpa.springpostresqljpa.domain.TutorialEntity;
 import it.tai.springpostresqljpa.springpostresqljpa.repository.TagRepository;
 import it.tai.springpostresqljpa.springpostresqljpa.repository.TutorialRepository;
 import it.tai.springpostresqljpa.springpostresqljpa.services.TagService;
@@ -11,9 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
@@ -30,10 +27,10 @@ public class TagController
     private TagService tagService;
 
     @GetMapping("/tags")
-    public ResponseEntity<List<Tag>> getAllTags()
+    public ResponseEntity<List<TagEntity>> getAllTags()
     {
-        List<Tag> tags = this.tagService.listTags();
-        return (tags != null && tags.size() != 0) ? ResponseEntity.ok(tags) : ResponseEntity.noContent().build();
+        List<TagEntity> tagEntities = this.tagService.listTags();
+        return (tagEntities != null && tagEntities.size() != 0) ? ResponseEntity.ok(tagEntities) : ResponseEntity.noContent().build();
 
         /*List<Tag> tags = new ArrayList<>();
         tagRepository.findAll().forEach(tags::add);
@@ -43,7 +40,7 @@ public class TagController
     }
 
     @GetMapping("/tags/{id}")
-    public ResponseEntity<Tag> getTagsById(@PathVariable(value = "id") long id)
+    public ResponseEntity<TagEntity> getTagsById(@PathVariable(value = "id") long id)
     {
         return ResponseEntity.ok(this.tagService.getTag(id));
 
@@ -52,10 +49,10 @@ public class TagController
     }
 
     @GetMapping("/tutorials/{tutorialId}/tags")
-    public ResponseEntity<List<Tag>> getAllTagsByTutorialId(@PathVariable(value = "tutorialId") long tutorialId)
+    public ResponseEntity<List<TagEntity>> getAllTagsByTutorialId(@PathVariable(value = "tutorialId") long tutorialId)
     {
-        List<Tag> tags = this.tagService.getTagsByTutorialId(tutorialId);
-        return (tags != null && tags.size() != 0) ? ResponseEntity.ok(tags) : ResponseEntity.noContent().build();
+        List<TagEntity> tagEntities = this.tagService.getTagsByTutorialId(tutorialId);
+        return (tagEntities != null && tagEntities.size() != 0) ? ResponseEntity.ok(tagEntities) : ResponseEntity.noContent().build();
 
         /*if(!tutorialRepository.existsById(tutorialId))
             throw new ResourceNotFoundException("Not found Tutorial with id "+tutorialId);
@@ -64,10 +61,14 @@ public class TagController
     }
 
     @GetMapping("/tags/{tagId}/tutorials")
-    public ResponseEntity<List<Tutorial>> getAllTutorialsByTagId(@PathVariable(value = "tagId") long tagId)
+    public ResponseEntity<List<TutorialEntity>> getAllTutorialsByTagId(@PathVariable(value = "tagId") long tagId)
     {
-        List<Tutorial> tutorials = this.tagService.getTutorialsByTagId(tagId);
-        return (tutorials != null && tutorials.size() != 0) ? ResponseEntity.ok(tutorials) : ResponseEntity.noContent().build();
+        List<TutorialEntity> tutorialEntities = this.tagService.getTutorialsByTagId(tagId);
+        if(tutorialEntities == null && tutorialEntities.size() == 0)
+            return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(tutorialEntities);
+
+        //return (tutorials != null && tutorials.size() != 0) ? ResponseEntity.ok(tutorials) : ResponseEntity.noContent().build();
 
         /*if(!tagRepository.existsById(tagId))
             throw new ResourceNotFoundException("Not found Tag with id = "+tagId);
@@ -97,9 +98,9 @@ public class TagController
     }
 
     @PutMapping("/tags/{id}")
-    public ResponseEntity<Tag> updateTag(@PathVariable("id") long id, @RequestBody Tag tagRequest)
+    public ResponseEntity<TagEntity> updateTag(@PathVariable("id") long id, @RequestBody TagEntity tagEntityRequest)
     {
-        this.tagService.updateTagInfo(id, tagRequest);
+        this.tagService.updateTagInfo(id, tagEntityRequest);
         return ResponseEntity.ok().build();
 
         /*Tag tag = tagRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Tag with id = "+id));
