@@ -40,7 +40,7 @@ public class TutorialDetailsController
     {
         TutorialEntity t = tutorialRepository.findById(tutorialId).orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id "+ tutorialId));
         detailsRequest.setCreatedOn(new Date());
-        detailsRequest.setTutorialEntity(t);
+        detailsRequest.setTutorialId(t);
         TutorialDetailsEntity details = detailsRepository.save(detailsRequest);
         return new ResponseEntity<>(details, HttpStatus.CREATED);
     }

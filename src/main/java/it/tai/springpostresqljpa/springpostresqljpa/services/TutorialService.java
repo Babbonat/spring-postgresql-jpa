@@ -26,7 +26,12 @@ public class TutorialService
     {
         if(request.getTitle() == null)
             throw new BadParameterException("title");
-        TutorialEntity tutorialEntity = tutorialRepository.saveAndFlush(TutorialEntity.builder()
+        TutorialEntity entity = tutorialMapper.toEntity(request);
+        tutorialRepository.saveAndFlush(entity);
+        CreateTutorialResponseDTO response = tutorialMapper.toResponse(entity);
+        return response;
+
+        /*TutorialEntity tutorialEntity = tutorialRepository.saveAndFlush(TutorialEntity.builder()
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .published(false).build());
@@ -34,6 +39,6 @@ public class TutorialService
                 .id(tutorialEntity.getId())
                 .title(tutorialEntity.getTitle())
                 .description(tutorialEntity.getDescription())
-                .published(tutorialEntity.isPublished()).build();
+                .published(tutorialEntity.isPublished()).build();*/
     }
 }

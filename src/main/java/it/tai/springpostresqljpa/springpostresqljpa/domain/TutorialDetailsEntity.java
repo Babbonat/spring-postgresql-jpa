@@ -19,15 +19,5 @@ public class TutorialDetailsEntity
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "tutorial_id")
-    private TutorialEntity tutorialEntity;
-
-    public TutorialDetailsEntity()
-    {
-
-    }
-
-    public TutorialDetailsEntity(String createdBy) {
-        this.createdOn = new Date();
-        this.createdBy = createdBy;
-    }
+    private TutorialEntity tutorialId;
 }
