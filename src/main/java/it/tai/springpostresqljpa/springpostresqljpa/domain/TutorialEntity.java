@@ -4,9 +4,7 @@ package it.tai.springpostresqljpa.springpostresqljpa.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +14,8 @@ import java.util.Set;
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity                                             //persistent java class
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "tutorials")                          //annotation provides the table that maps this entity
 public class TutorialEntity
 {
