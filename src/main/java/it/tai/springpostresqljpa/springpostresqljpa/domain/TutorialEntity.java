@@ -13,9 +13,6 @@ import java.util.Set;
 @EqualsAndHashCode
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity                                             //persistent java class
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "tutorials")                          //annotation provides the table that maps this entity
 public class TutorialEntity
 {

@@ -1,11 +1,17 @@
 package it.tai.springpostresqljpa.springpostresqljpa.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import it.tai.springpostresqljpa.springpostresqljpa.exceptions.ResourceNotFoundException;
 import it.tai.springpostresqljpa.springpostresqljpa.domain.TutorialEntity;
 import it.tai.springpostresqljpa.springpostresqljpa.repository.TutorialRepository;
 import it.tai.springpostresqljpa.springpostresqljpa.services.TutorialService;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.CreateTutorialRequestDTO;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.CreateTutorialResponseDTO;
+import it.tai.springpostresqljpa.springpostresqljpa.services.dto.TutorialResponseDTO;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.UpdateTutorialRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -18,19 +24,27 @@ import java.util.*;
 //rest controller che fa il request mapping dei metodi per restful request
 @CrossOrigin(origins="*")
 @RestController
+@RestControllerAdvice
 @RequestMapping("/api")
 public class TutorialController
 {
     @Autowired
-    TutorialRepository tutorialRepository;
-
-    @Autowired
     TutorialService tutorialService;
 
     @GetMapping("/tutorials")
-    public ResponseEntity<List<TutorialEntity>> getAllTutorials(@RequestParam(required = false) String title)
+    @Operation(summary = "get all tutorials")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                         description = "lists all tutorials",
+                         content = {@Content(mediaType = "application/json",
+                         schema = @Schema(implementation = TutorialEntity.class))}),
+            @ApiResponse(responseCode = "204",
+                         description = "no tutorials found",
+                         content = @Content)
+    })
+    public ResponseEntity<List<TutorialResponseDTO>> getAllTutorials(@RequestParam(required = false) String title)
     {
-        List<TutorialEntity> tutorials = tutorialService.listTutorials(title);
+        List<TutorialResponseDTO> tutorials = tutorialService.listTutorials(title);
         if(tutorials.isEmpty())
             return ResponseEntity.noContent().build();
         return ResponseEntity.ok(tutorials);

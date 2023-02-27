@@ -3,6 +3,7 @@ package it.tai.springpostresqljpa.springpostresqljpa.mapper;
 import it.tai.springpostresqljpa.springpostresqljpa.domain.TutorialEntity;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.CreateTutorialRequestDTO;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.CreateTutorialResponseDTO;
+import it.tai.springpostresqljpa.springpostresqljpa.services.dto.TutorialResponseDTO;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.UpdateTutorialRequestDTO;
 import org.mapstruct.Mapper;
 
@@ -11,5 +12,6 @@ public interface TutorialMapper
 {
     TutorialEntity toEntity(CreateTutorialRequestDTO request);
     TutorialEntity toEntity(UpdateTutorialRequestDTO request);
-    CreateTutorialResponseDTO toResponse(TutorialEntity entity);
+    CreateTutorialResponseDTO toCreateResponse(TutorialEntity entity);
+    TutorialResponseDTO toResponse(TutorialEntity entity);
 }

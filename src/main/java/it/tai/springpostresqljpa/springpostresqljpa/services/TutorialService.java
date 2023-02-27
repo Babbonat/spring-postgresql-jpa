@@ -7,6 +7,7 @@ import it.tai.springpostresqljpa.springpostresqljpa.mapper.TutorialMapper;
 import it.tai.springpostresqljpa.springpostresqljpa.repository.TutorialRepository;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.CreateTutorialRequestDTO;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.CreateTutorialResponseDTO;
+import it.tai.springpostresqljpa.springpostresqljpa.services.dto.TutorialResponseDTO;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.UpdateTutorialRequestDTO;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -28,14 +29,18 @@ public class TutorialService
     @Autowired
     TutorialMapper tutorialMapper;
 
-    public List<TutorialEntity> listTutorials(String title)
+    //public List<TutorialEntity> listTutorials(String title)
+    public List<TutorialResponseDTO> listTutorials(String title)
     {
         List<TutorialEntity> list = new ArrayList<>();
         if(title == null)
             tutorialRepository.findAll().forEach(list::add);
         else
             tutorialRepository.findByTitleContaining(title).forEach(list::add);
-        return list;
+        List<TutorialResponseDTO> responses = new ArrayList<>();
+        for(TutorialEntity t : list)
+            responses.add(tutorialMapper.toResponse(t));
+        return responses;
     }
 
     public TutorialEntity getTutorialById(long tutorialId)
@@ -62,7 +67,7 @@ public class TutorialService
             throw new BadParameterException("description");
         TutorialEntity entity = tutorialMapper.toEntity(request);
         tutorialRepository.saveAndFlush(entity);
-        CreateTutorialResponseDTO response = tutorialMapper.toResponse(entity);
+        CreateTutorialResponseDTO response = tutorialMapper.toCreateResponse(entity);
         return response;
 
         /*TutorialEntity tutorialEntity = tutorialRepository.saveAndFlush(TutorialEntity.builder()
