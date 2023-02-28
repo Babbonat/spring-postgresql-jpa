@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import it.tai.springpostresqljpa.springpostresqljpa.domain.TutorialEntity;
+import it.tai.springpostresqljpa.springpostresqljpa.mapper.TutorialMapper;
 import it.tai.springpostresqljpa.springpostresqljpa.services.TutorialService;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.CreateTutorialRequestDTO;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.CreateTutorialResponseDTO;
@@ -27,14 +28,14 @@ public class TutorialController
     @Autowired
     TutorialService tutorialService;
 
-    @Operation(summary = "get all tutorials")
+    @Operation(summary = "Restituisce tutti i tutorial")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                         description = "lists all tutorials",
+                         description = "Restituisce tutti i tutorial",
                          content = {@Content(mediaType = "application/json",
-                         schema = @Schema(implementation = TutorialEntity.class))}),
+                         schema = @Schema(implementation = TutorialResponseDTO.class))}),
             @ApiResponse(responseCode = "204",
-                         description = "no tutorials found",
+                         description = "Nessun tutorial trovato",
                          content = @Content)
     })
     @GetMapping("/tutorials")
@@ -44,85 +45,107 @@ public class TutorialController
         if(tutorials.isEmpty())
             return ResponseEntity.noContent().build();
         return ResponseEntity.ok(tutorials);
-
-        /*List<TutorialEntity> tutorialEntities = new ArrayList<>();
-        //Order order = new Order(Sort.Direction.ASC, "id");
-        if (title == null)
-            tutorialRepository.findAll(Sort.by("id")).forEach(tutorialEntities::add);
-        //tutorialRepository.findAll(Sort.by(order)).forEach(tutorials::add);
-        else
-            tutorialRepository.findByTitleContaining(title).forEach(tutorialEntities::add);
-        if(tutorialEntities.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(tutorialEntities, HttpStatus.OK);*/
     }
 
+    @Operation(summary = "Restituisce un tutorial dato il suo id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Restituisce un tutorial dato il suo id",
+                    content = {@Content(mediaType = "application/json",
+                    schema = @Schema(implementation = TutorialResponseDTO.class))}),
+            @ApiResponse(responseCode = "204",
+                    description = "Nessun tutorial trovato",
+                    content = @Content)
+    })
     @GetMapping("/tutorials/{id}")
-    public ResponseEntity<TutorialEntity> getTutorialById(@PathVariable("id") long tutorialId)
+    public ResponseEntity<TutorialResponseDTO> getTutorialById(@PathVariable("id") long tutorialId)
     {
-        TutorialEntity tutorial = tutorialService.getTutorialById(tutorialId);
+        TutorialResponseDTO tutorial = tutorialService.getTutorialById(tutorialId);
         return ResponseEntity.ok(tutorial);
-
-        /*TutorialEntity t = tutorialRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id = " + id));
-        return new ResponseEntity<>(t, HttpStatus.CREATED);*/
     }
 
+    @Operation(summary = "Restituisce tutti i tutorial pubblicati")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Restituisce tutti i tutorial pubblicati",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TutorialResponseDTO.class))}),
+            @ApiResponse(responseCode = "204",
+                    description = "Nessun tutorial pubblicato trovato",
+                    content = @Content)
+    })
+    @GetMapping("/tutorials/published")
+    public ResponseEntity<List<TutorialResponseDTO>> findByPublished() {
+        List<TutorialResponseDTO> tutorials = tutorialService.listPublishedTutorils();
+        if(tutorials == null || tutorials.isEmpty())
+            return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(tutorials);
+    }
+
+    @Operation(summary = "Pubblica un nuovo tutorial")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Pubblica un nuovo tutorial",
+                    content = {@Content(mediaType = "application/json",
+                    schema = @Schema(implementation = CreateTutorialRequestDTO.class))}),
+            @ApiResponse(responseCode = "400",
+                         description = "Richiesta mal formata")
+    })
     @PostMapping("/tutorials")
     public ResponseEntity<CreateTutorialResponseDTO> createTutorial(@RequestBody CreateTutorialRequestDTO request)
     {
         CreateTutorialResponseDTO response = this.tutorialService.createTutorial(request);
         return ResponseEntity.ok(response);
-
-        /*try
-        {
-            TutorialEntity t = tutorialRepository.save(new TutorialEntity(tutorialEntity.getTitle(), tutorialEntity.getDescription(),false));
-            return new ResponseEntity<>(t, HttpStatus.CREATED);
-         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }*/
     }
 
+
+    @Operation(summary = "Aggiorna un Tutorial")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Aggiorna un Tutorial",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TutorialResponseDTO.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Richiesta mal formata",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "Tutorial non trovato",
+                    content = @Content)
+    })
     @PutMapping("/tutorials/{id}")
-    public ResponseEntity<TutorialEntity> updateTutorial(@PathVariable("id") long id, @RequestBody UpdateTutorialRequestDTO request)
+    public ResponseEntity<TutorialResponseDTO> updateTutorial(@PathVariable("id") long id, @RequestBody UpdateTutorialRequestDTO request)
     {
-        TutorialEntity tutorial = tutorialService.updateTutorial(id, request);
+        TutorialResponseDTO tutorial = tutorialService.updateTutorial(id, request);
         return ResponseEntity.ok(tutorial);
-
-        /*TutorialEntity t = tutorialRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id = " + id));
-        t.setTitle(tutorialEntity.getTitle());
-        t.setDescription(tutorialEntity.getDescription());
-        t.setPublished(tutorialEntity.isPublished());
-        return new ResponseEntity<>(tutorialRepository.save(t), HttpStatus.OK);*/
     }
 
+    @Operation(summary = "Elimina un Tutorial")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Elimina un Tutorial dato un id",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TutorialResponseDTO.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "Tutorial non trovato",
+                    content = @Content)
+    })
     @DeleteMapping("/tutorials/{id}")
     public ResponseEntity<HttpStatus> deleteTutorial(@PathVariable("id") long id) {
         tutorialService.deleteTutorial(id);
         return ResponseEntity.ok().build();
-        /*tutorialRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);*/
     }
 
+    @Operation(summary = "Elimina tutti i Tutorial")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Elimina tutti i Tutorial",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TutorialResponseDTO.class))})
+    })
     @DeleteMapping("/tutorials")
     public ResponseEntity<HttpStatus> deleteAllTutorials() {
         tutorialService.deleteAllTutorials();
         return ResponseEntity.ok().build();
-
-        /*tutorialRepository.deleteAll();
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);*/
-    }
-
-    @GetMapping("/tutorials/published")
-    public ResponseEntity<List<TutorialEntity>> findByPublished() {
-        List<TutorialEntity> tutorials = tutorialService.listPublishedTutorils();
-        if(tutorials.isEmpty())
-            return ResponseEntity.noContent().build();
-        return ResponseEntity.ok(tutorials);
-
-        /*List<TutorialEntity> tutorialEntities = tutorialRepository.findByPublished(true);
-        if (tutorialEntities.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(tutorialEntities, HttpStatus.OK);*/
     }
 }

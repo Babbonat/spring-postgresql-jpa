@@ -29,7 +29,6 @@ public class TutorialService
     @Autowired
     TutorialMapper tutorialMapper;
 
-    //public List<TutorialEntity> listTutorials(String title)
     public List<TutorialResponseDTO> listTutorials(String title)
     {
         List<TutorialEntity> list = new ArrayList<>();
@@ -43,20 +42,24 @@ public class TutorialService
         return responses;
     }
 
-    public TutorialEntity getTutorialById(long tutorialId)
+    public TutorialResponseDTO getTutorialById(long tutorialId)
     {
         if(tutorialId < 0)
             throw new BadParameterException("tutorialId");
         Optional<TutorialEntity> tutorial = tutorialRepository.findById(tutorialId);
         if(tutorial.isEmpty())
             throw new ResourceNotFoundException("tutorial not found", tutorialId);
-        return tutorial.get();
+        return tutorialMapper.toResponse(tutorial.get());
     }
 
-    public List<TutorialEntity> listPublishedTutorils()
+    public List<TutorialResponseDTO> listPublishedTutorils()
     {
         List<TutorialEntity> tutorials = tutorialRepository.findByPublished(true);
-        return tutorials;
+        if(tutorials.isEmpty())
+            return null;
+        List<TutorialResponseDTO> response = new ArrayList<>();
+        tutorials.forEach(tutorial -> response.add(tutorialMapper.toResponse(tutorial)));
+        return response;
     }
 
     public CreateTutorialResponseDTO createTutorial(CreateTutorialRequestDTO request)
@@ -69,19 +72,9 @@ public class TutorialService
         tutorialRepository.saveAndFlush(entity);
         CreateTutorialResponseDTO response = tutorialMapper.toCreateResponse(entity);
         return response;
-
-        /*TutorialEntity tutorialEntity = tutorialRepository.saveAndFlush(TutorialEntity.builder()
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .published(false).build());
-        return CreateTutorialResponseDTO.builder()
-                .id(tutorialEntity.getId())
-                .title(tutorialEntity.getTitle())
-                .description(tutorialEntity.getDescription())
-                .published(tutorialEntity.isPublished()).build();*/
     }
 
-    public TutorialEntity updateTutorial(long tutorialId, UpdateTutorialRequestDTO request)
+    public TutorialResponseDTO updateTutorial(long tutorialId, UpdateTutorialRequestDTO request)
     {
         if(tutorialId < 0)
             throw new BadParameterException("tutorialId");
@@ -96,16 +89,7 @@ public class TutorialService
         tutorialToUpdate.setDescription(tutorialRequest.getDescription());
         tutorialToUpdate.setPublished(tutorialRequest.isPublished());
 
-        /*if(tutorialRequest.getTitle() != null)
-            tutorialToUpdate.setTitle(tutorialRequest.getTitle());
-        if(tutorialRequest.getDescription() != null)
-            tutorialToUpdate.setDescription(tutorialRequest.getDescription());
-        if(tutorialRequest.getPublished() != null)
-        {
-            boolean published = Boolean.parseBoolean(request.getPublished());
-            tutorialToUpdate.setPublished(published);
-        }*/
-        return tutorialRepository.saveAndFlush(tutorialToUpdate);
+        return tutorialMapper.toResponse(tutorialRepository.saveAndFlush(tutorialToUpdate));
     }
 
     public void deleteTutorial(long tutorialId)

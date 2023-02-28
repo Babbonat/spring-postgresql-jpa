@@ -1,5 +1,6 @@
 package it.tai.springpostresqljpa.springpostresqljpa.services;
 
+import it.tai.springpostresqljpa.springpostresqljpa.exceptions.BadParameterException;
 import it.tai.springpostresqljpa.springpostresqljpa.exceptions.ResourceNotFoundException;
 import it.tai.springpostresqljpa.springpostresqljpa.domain.TagEntity;
 import it.tai.springpostresqljpa.springpostresqljpa.domain.TutorialEntity;
@@ -130,7 +131,10 @@ public class TagService
 
     public void deleteTag(long tagId)
     {
-        tagRepository.deleteById(tagId);
+        if(tagId < 0)
+            throw new BadParameterException("tagId");
+        if(tagRepository.existsById(tagId))
+            tagRepository.deleteById(tagId);
     }
 
     private TagEntity ensureTag(String tagName)

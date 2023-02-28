@@ -33,21 +33,12 @@ public class TagController
     {
         List<TagsResponseDTO> tagEntities = this.tagService.listTags();
         return (tagEntities != null && tagEntities.size() != 0) ? ResponseEntity.ok(tagEntities) : ResponseEntity.noContent().build();
-
-        /*List<Tag> tags = new ArrayList<>();
-        tagRepository.findAll().forEach(tags::add);
-        if(tags.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(tags, HttpStatus.OK);*/
     }
 
     @GetMapping("/tags/{id}")
     public ResponseEntity<TagEntity> getTagsById(@PathVariable(value = "id") long id)
     {
         return ResponseEntity.ok(this.tagService.getTag(id));
-
-        /*Tag tag = tagRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Tag with id = " + id));
-        return new ResponseEntity<>(tag, HttpStatus.OK);*/
     }
 
     @GetMapping("/tutorials/{tutorialId}/tags")
@@ -58,11 +49,6 @@ public class TagController
             return ResponseEntity.noContent().build();
         else
             return ResponseEntity.ok(tagEntities);
-
-        /*if(!tutorialRepository.existsById(tutorialId))
-            throw new ResourceNotFoundException("Not found Tutorial with id "+tutorialId);
-        List<Tag> tags = tagRepository.findTagsByTutorialsId(tutorialId);
-        return new ResponseEntity<>(tags, HttpStatus.OK);*/
     }
 
     @GetMapping("/tags/{tagId}/tutorials")
@@ -72,13 +58,6 @@ public class TagController
         if(tutorialEntities == null && tutorialEntities.size() == 0)
             return ResponseEntity.noContent().build();
         return ResponseEntity.ok(tutorialEntities);
-
-        //return (tutorials != null && tutorials.size() != 0) ? ResponseEntity.ok(tutorials) : ResponseEntity.noContent().build();
-
-        /*if(!tagRepository.existsById(tagId))
-            throw new ResourceNotFoundException("Not found Tag with id = "+tagId);
-        List<Tutorial> tutorials = tutorialRepository.findTutorialsByTagsId(tagId);
-        return new ResponseEntity<>(tutorials, HttpStatus.OK);*/
     }
 
     @GetMapping("/tags/{tagName}/tutorials")
@@ -95,20 +74,6 @@ public class TagController
     {
         this.tagService.tagTutorial(tutorialId, tagName);
         return ResponseEntity.ok().build();
-
-        /*Tag tag = tutorialRepository.findById(tutorialId).map(tutorial -> {
-            long tagId = tagRequest.getId();
-            if(tagId != 0L)     //tag esiste
-            {
-                Tag t = tagRepository.findById(tagId).orElseThrow(() -> new ResourceNotFoundException("Not found Tag with id = "+ tagId));
-                tutorial.addTag(t);
-                tutorialRepository.save(tutorial);
-                return t;
-            }
-            tutorial.addTag(tagRequest);
-            return tagRepository.save(tagRequest);
-        }).orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id = "+ tutorialId));
-        return new ResponseEntity<>(tag, HttpStatus.CREATED);*/
     }
 
     @PutMapping("/tags/{id}")
@@ -116,29 +81,17 @@ public class TagController
     {
         this.tagService.updateTagInfo(id, request);
         return ResponseEntity.ok().build();
-
-        /*Tag tag = tagRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Tag with id = "+id));
-        tag.setName(tagRequest.getName());
-        return new ResponseEntity<>(tagRepository.save(tag), HttpStatus.OK);*/
     }
 
     @DeleteMapping("/tutorials/{tutorialId}/tags/{tagId}")
     public ResponseEntity<HttpStatus> deleteTagFromTutorial(@PathVariable(value = "tutorialId") long tutorialId, @PathVariable(value = "tagId") Long tagId) {
         this.tagService.untagTutorial(tutorialId, tagId);
         return ResponseEntity.ok().build();
-
-        /*Tutorial tutorial = tutorialRepository.findById(tutorialId).orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id = " + tutorialId));
-        tutorial.removeTag(tagId);
-        tutorialRepository.save(tutorial);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);*/
     }
 
     @DeleteMapping("/tags/{id}")
     public ResponseEntity<HttpStatus> deleteTag(@PathVariable("id") long id) {
         this.tagService.deleteTag(id);
         return ResponseEntity.ok().build();
-
-        /*tagRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);*/
     }
 }
