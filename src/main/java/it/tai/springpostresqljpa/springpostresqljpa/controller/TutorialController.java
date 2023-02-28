@@ -24,15 +24,13 @@ import java.util.*;
 //rest controller che fa il request mapping dei metodi per restful request
 @CrossOrigin(origins="*")
 @RestController
-@RestControllerAdvice
 @RequestMapping("/api")
 public class TutorialController
 {
     @Autowired
     TutorialService tutorialService;
 
-    @GetMapping("/tutorials")
-    @Operation(summary = "get all tutorials")
+    /*@Operation(summary = "get all tutorials")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                          description = "lists all tutorials",
@@ -41,7 +39,9 @@ public class TutorialController
             @ApiResponse(responseCode = "204",
                          description = "no tutorials found",
                          content = @Content)
-    })
+    })*/
+
+    @GetMapping("/tutorials")
     public ResponseEntity<List<TutorialResponseDTO>> getAllTutorials(@RequestParam(required = false) String title)
     {
         List<TutorialResponseDTO> tutorials = tutorialService.listTutorials(title);
