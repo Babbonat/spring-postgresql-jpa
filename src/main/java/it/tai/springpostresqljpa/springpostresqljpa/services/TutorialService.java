@@ -5,10 +5,10 @@ import it.tai.springpostresqljpa.springpostresqljpa.exceptions.BadParameterExcep
 import it.tai.springpostresqljpa.springpostresqljpa.exceptions.ResourceNotFoundException;
 import it.tai.springpostresqljpa.springpostresqljpa.mapper.TutorialMapper;
 import it.tai.springpostresqljpa.springpostresqljpa.repository.TutorialRepository;
-import it.tai.springpostresqljpa.springpostresqljpa.services.dto.CreateTutorialRequestDTO;
-import it.tai.springpostresqljpa.springpostresqljpa.services.dto.CreateTutorialResponseDTO;
-import it.tai.springpostresqljpa.springpostresqljpa.services.dto.TutorialResponseDTO;
-import it.tai.springpostresqljpa.springpostresqljpa.services.dto.UpdateTutorialRequestDTO;
+import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.CreateTutorialRequestDTO;
+import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.CreateTutorialResponseDTO;
+import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.TutorialResponseDTO;
+import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.UpdateTutorialRequestDTO;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

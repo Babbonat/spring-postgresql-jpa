@@ -1,4 +1,4 @@
-package it.tai.springpostresqljpa.springpostresqljpa.services.dto;
+package it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO;
 
 import lombok.Builder;
 import lombok.Data;

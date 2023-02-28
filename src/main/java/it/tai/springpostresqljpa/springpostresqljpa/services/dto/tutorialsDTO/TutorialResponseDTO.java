@@ -1,4 +1,4 @@
-package it.tai.springpostresqljpa.springpostresqljpa.services.dto;
+package it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO;
 
 import it.tai.springpostresqljpa.springpostresqljpa.domain.TagEntity;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tagsDTO.TagsResponseDTO;

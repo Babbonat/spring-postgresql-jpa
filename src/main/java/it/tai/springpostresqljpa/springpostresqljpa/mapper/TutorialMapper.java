@@ -1,10 +1,10 @@
 package it.tai.springpostresqljpa.springpostresqljpa.mapper;
 
 import it.tai.springpostresqljpa.springpostresqljpa.domain.TutorialEntity;
-import it.tai.springpostresqljpa.springpostresqljpa.services.dto.CreateTutorialRequestDTO;
-import it.tai.springpostresqljpa.springpostresqljpa.services.dto.CreateTutorialResponseDTO;
-import it.tai.springpostresqljpa.springpostresqljpa.services.dto.TutorialResponseDTO;
-import it.tai.springpostresqljpa.springpostresqljpa.services.dto.UpdateTutorialRequestDTO;
+import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.CreateTutorialRequestDTO;
+import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.CreateTutorialResponseDTO;
+import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.TutorialResponseDTO;
+import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.UpdateTutorialRequestDTO;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
