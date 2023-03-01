@@ -31,14 +31,15 @@ public class TutorialService
 
     public List<TutorialResponseDTO> listTutorials(String title)
     {
-        List<TutorialEntity> list = new ArrayList<>();
+        List<TutorialEntity> tutorials = new ArrayList<>();
         if(title == null)
-            tutorialRepository.findAll().forEach(list::add);
+            tutorialRepository.findAll().forEach(tutorials::add);
         else
-            tutorialRepository.findByTitleContaining(title).forEach(list::add);
+            tutorialRepository.findByTitleContaining(title).forEach(tutorials::add);
+        if(tutorials.isEmpty())
+            throw new ResourceNotFoundException("tutorials not found");
         List<TutorialResponseDTO> responses = new ArrayList<>();
-        for(TutorialEntity t : list)
-            responses.add(tutorialMapper.toResponse(t));
+        tutorials.forEach(tutorial -> responses.add(tutorialMapper.toResponse(tutorial)));
         return responses;
     }
 
@@ -56,7 +57,7 @@ public class TutorialService
     {
         List<TutorialEntity> tutorials = tutorialRepository.findByPublished(true);
         if(tutorials.isEmpty())
-            return null;
+            throw new ResourceNotFoundException("nessun tutorial pubblicato");
         List<TutorialResponseDTO> response = new ArrayList<>();
         tutorials.forEach(tutorial -> response.add(tutorialMapper.toResponse(tutorial)));
         return response;
@@ -80,6 +81,11 @@ public class TutorialService
             throw new BadParameterException("tutorialId");
         if(request == null)
             throw new BadParameterException("request");
+        if(request.getTitle() == null)
+            throw new BadParameterException("request.title");
+        if(request.getDescription() == null)
+            throw new BadParameterException("request.description");
+        //controllo su published, renderlo String?
         Optional<TutorialEntity> tutorial = tutorialRepository.findById(tutorialId);
         if(tutorial.isEmpty())
             throw new ResourceNotFoundException("tutorial not found", tutorialId);
@@ -88,16 +94,12 @@ public class TutorialService
         tutorialToUpdate.setTitle(tutorialRequest.getTitle());
         tutorialToUpdate.setDescription(tutorialRequest.getDescription());
         tutorialToUpdate.setPublished(tutorialRequest.isPublished());
-
         return tutorialMapper.toResponse(tutorialRepository.saveAndFlush(tutorialToUpdate));
     }
 
     public void deleteTutorial(long tutorialId)
     {
-        if(tutorialId < 0)
-            throw new BadParameterException("tutorialId");
-        if(tutorialRepository.existsById(tutorialId))
-            tutorialRepository.deleteById(tutorialId);
+        tutorialRepository.deleteById(tutorialId);
     }
 
     public void deleteAllTutorials()

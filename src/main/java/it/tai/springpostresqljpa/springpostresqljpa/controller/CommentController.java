@@ -1,5 +1,6 @@
 package it.tai.springpostresqljpa.springpostresqljpa.controller;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import it.tai.springpostresqljpa.springpostresqljpa.exceptions.ResourceNotFoundException;
 import it.tai.springpostresqljpa.springpostresqljpa.domain.CommentEntity;
 import it.tai.springpostresqljpa.springpostresqljpa.repository.CommentRepository;
@@ -14,6 +15,7 @@ import java.util.List;
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
+@Hidden
 public class CommentController
 {
     @Autowired
@@ -39,12 +41,12 @@ public class CommentController
     @PostMapping("/tutorials/{tutorialId}/comments")
     public ResponseEntity<CommentEntity> createComment(@PathVariable(value = "tutorialId") long tutorialId, @RequestBody CommentEntity commentEntityRequest)
     {
-        /*CommentEntity commentEntity = tutorialRepository.findById(tutorialId).map(tutorial ->
+        CommentEntity commentEntity = tutorialRepository.findById(tutorialId).map(tutorial ->
         {
-            commentEntityRequest.setTutorialEntity(tutorial);
+            commentEntityRequest.setTutorial(tutorial);
             return commentRepository.save(commentEntityRequest);
         }).orElseThrow(() -> new ResourceNotFoundException("Not found tutorial with id "+tutorialId));
-        return new ResponseEntity<>(commentEntity, HttpStatus.CREATED);*/ return null;
+        return new ResponseEntity<>(commentEntity, HttpStatus.CREATED);
     }
 
     @PutMapping

@@ -1,5 +1,6 @@
 package it.tai.springpostresqljpa.springpostresqljpa.exceptions;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,6 +18,7 @@ public class ControllerExceptionHandler
 {
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    @Hidden
     public ErrorMessage resourceNotFoundException(ResourceNotFoundException ex, WebRequest request)
     {
         return new ErrorMessage(HttpStatus.NOT_FOUND.value(), new Date(), ex.getMessage(), request.getDescription(false));
@@ -24,6 +26,7 @@ public class ControllerExceptionHandler
 
     @ExceptionHandler(BadParameterException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @Hidden
     public ErrorMessage badParameterException(BadParameterException ex, WebRequest request)
     {
         return new ErrorMessage(HttpStatus.BAD_REQUEST.value(), new Date(), ex.getMessage(), request.getDescription(false));
@@ -31,6 +34,7 @@ public class ControllerExceptionHandler
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    @Hidden
     public ErrorMessage globalExceptionHandler(Exception ex, WebRequest request) {
         this.log.error(String.format("request: %s, exception: %s", request.getDescription(false), ex.getMessage()), ex);
         return new ErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR.value(), new Date(), ex.getMessage(), request.getDescription(false));

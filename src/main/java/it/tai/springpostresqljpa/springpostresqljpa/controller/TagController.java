@@ -1,12 +1,16 @@
 package it.tai.springpostresqljpa.springpostresqljpa.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import it.tai.springpostresqljpa.springpostresqljpa.domain.TagEntity;
-import it.tai.springpostresqljpa.springpostresqljpa.repository.TagRepository;
-import it.tai.springpostresqljpa.springpostresqljpa.repository.TutorialRepository;
+import it.tai.springpostresqljpa.springpostresqljpa.exceptions.ErrorMessage;
 import it.tai.springpostresqljpa.springpostresqljpa.services.TagService;
-import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tagsDTO.UpdateTagRequestDTO;
+import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tagsDTO.TagRequestDTO;
+import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tagsDTO.TagResponseDTO;
+import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.CreateTutorialResponseDTO;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.TutorialResponseDTO;
-import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tagsDTO.TagsResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,79 +21,161 @@ import java.util.List;
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
-public class TagController
-{
-    @Autowired
-    private TutorialRepository tutorialRepository;
-
-    @Autowired
-    private TagRepository tagRepository;
-
+public class TagController {
     @Autowired
     private TagService tagService;
 
     @GetMapping("/tags")
-    public ResponseEntity<List<TagsResponseDTO>> getAllTags()
-    {
-        List<TagsResponseDTO> tagEntities = this.tagService.listTags();
-        return (tagEntities != null && tagEntities.size() != 0) ? ResponseEntity.ok(tagEntities) : ResponseEntity.noContent().build();
+    @Operation(summary = "Restituisce tutti i Tag")
+    @ApiResponse(responseCode = "200",
+                 description = "Successo",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = TagResponseDTO.class,
+                                    type = "array")))
+    @ApiResponse(responseCode = "404",
+                 description = "Nessun Tag trovato",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    @ApiResponse(responseCode = "500",
+                 description = "Errore interno del Server",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    public ResponseEntity<List<TagResponseDTO>> getAllTags() {
+        List<TagResponseDTO> tagEntities = this.tagService.listTags();
+        return ResponseEntity.ok(tagEntities);
     }
 
     @GetMapping("/tags/{id}")
-    public ResponseEntity<TagEntity> getTagsById(@PathVariable(value = "id") long id)
-    {
+    @Operation(summary = "Restituisce un Tag dato il suo id")
+    @ApiResponse(responseCode = "200",
+                 description = "Successo",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = TagResponseDTO.class,
+                                    type = "array")))
+    @ApiResponse(responseCode = "404",
+                 description = "Nessun Tag trovato",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    @ApiResponse(responseCode = "500",
+                 description = "Errore interno del Server",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    public ResponseEntity<TagResponseDTO> getTagsById(@PathVariable(value = "id") long id) {
         return ResponseEntity.ok(this.tagService.getTag(id));
     }
 
     @GetMapping("/tutorials/{tutorialId}/tags")
-    public ResponseEntity<List<TagsResponseDTO>> getAllTagsByTutorialId(@PathVariable(value = "tutorialId") long tutorialId)
-    {
-        List<TagsResponseDTO> tagEntities = this.tagService.getTagsByTutorialId(tutorialId);
-        if(tagEntities == null && tagEntities.size() == 0)
-            return ResponseEntity.noContent().build();
-        else
-            return ResponseEntity.ok(tagEntities);
-    }
-
-    @GetMapping("/tags/{tagId}/tutorials")
-    public ResponseEntity<List<TutorialResponseDTO>> getAllTutorialsByTagId(@PathVariable(value = "tagId") long tagId)
-    {
-        List<TutorialResponseDTO> tutorialEntities = this.tagService.getTutorialsByTagId(tagId);
-        if(tutorialEntities == null && tutorialEntities.size() == 0)
-            return ResponseEntity.noContent().build();
-        return ResponseEntity.ok(tutorialEntities);
+    @Operation(summary = "Restituisce tutti i Tag dato un certo Tutorial")
+    @ApiResponse(responseCode = "200",
+                 description = "Successo",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = TagResponseDTO.class,
+                                    type = "array")))
+    @ApiResponse(responseCode = "404",
+                 description = "Nessun Tag trovato | Nessun Tutorial trovato",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    @ApiResponse(responseCode = "500",
+                 description = "Errore interno del Server",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    public ResponseEntity<List<TagResponseDTO>> getAllTagsByTutorialId(@PathVariable(value = "tutorialId") long tutorialId) {
+        List<TagResponseDTO> tagEntities = this.tagService.getTagsByTutorialId(tutorialId);
+        return ResponseEntity.ok(tagEntities);
     }
 
     @GetMapping("/tags/{tagName}/tutorials")
-    public ResponseEntity<List<TutorialResponseDTO>> getAllTutorialsByTagName(@PathVariable(value = "tagName") String tagName)
-    {
+    @Operation(summary = "Restituisce tutti i Tutorial con un certo Tag")
+    @ApiResponse(responseCode = "200",
+                 description = "Successo",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = TutorialResponseDTO.class,
+                                    type = "array")))
+    @ApiResponse(responseCode = "404",
+                 description = "Nessun Tag trovato | Nessun Tutorial trovato",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    @ApiResponse(responseCode = "500",
+                 description = "Errore interno del Server",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    public ResponseEntity<List<TutorialResponseDTO>> getAllTutorialsByTagName(@PathVariable(value = "tagName") String tagName) {
         List<TutorialResponseDTO> tutorialEntities = this.tagService.getTutorialsByTagName(tagName);
-        if(tutorialEntities == null && tutorialEntities.size() == 0)
-            return ResponseEntity.noContent().build();
         return ResponseEntity.ok(tutorialEntities);
     }
 
-    @PostMapping("/tutorials/{tutorialId}/tags/{tagName}")
-    public ResponseEntity addTag(@PathVariable(value = "tutorialId") long tutorialId, @PathVariable(value = "tagName") String tagName)
+    @PostMapping("/tutorials/{tutorialId}/tags")
+    @Operation(summary = "Aggiunge un nuovo Tag ad un certo Tutorial")
+    @ApiResponse(responseCode = "200",
+                 description = "Successo",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = TutorialResponseDTO.class)))
+    @ApiResponse(responseCode = "404",
+                 description = "Nessun Tutorial trovato",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    @ApiResponse(responseCode = "500",
+                 description = "Errore interno del Server",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    public ResponseEntity<TutorialResponseDTO> addTag(@PathVariable(value = "tutorialId") long tutorialId, @RequestBody TagRequestDTO request)
     {
-        this.tagService.tagTutorial(tutorialId, tagName);
+        this.tagService.tagTutorial(tutorialId, request);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/tags/{id}")
-    public ResponseEntity<TagEntity> updateTag(@PathVariable("id") long id, @RequestBody UpdateTagRequestDTO request)
+    @Operation(summary = "Aggiorna un Tutorial")
+    @ApiResponse(responseCode = "200",
+                 description = "Successo",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = TagResponseDTO.class)))
+    @ApiResponse(responseCode = "400",
+                 description = "Richiesta errata",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    @ApiResponse(responseCode = "404",
+                 description = "Nessun Tag trovato",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    @ApiResponse(responseCode = "500",
+                 description = "Errore interno del Server",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    public ResponseEntity<TagResponseDTO> updateTag(@PathVariable("id") long id, @RequestBody TagRequestDTO request)
     {
-        this.tagService.updateTagInfo(id, request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(tagService.updateTagInfo(id, request));
     }
 
     @DeleteMapping("/tutorials/{tutorialId}/tags/{tagId}")
+    @Operation(summary = "Elimina un Tag da un Tutorial")
+    @ApiResponse(responseCode = "200",
+                 description = "Successo",
+                 content = @Content(mediaType = "application/json",
+                                     schema = @Schema(implementation = HttpStatus.class)))
+    @ApiResponse(responseCode = "404",
+                 description = "Nessun Tutorial trovato",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    @ApiResponse(responseCode = "500",
+                 description = "Errore interno del Server",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
     public ResponseEntity<HttpStatus> deleteTagFromTutorial(@PathVariable(value = "tutorialId") long tutorialId, @PathVariable(value = "tagId") Long tagId) {
         this.tagService.untagTutorial(tutorialId, tagId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/tags/{id}")
+    @Operation(summary = "Elimina un Tutorial")
+    @ApiResponse(responseCode = "200",
+                 description = "Successo",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = HttpStatus.class)))
+    @ApiResponse(responseCode = "500",
+                 description = "Errore interno del Server",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
     public ResponseEntity<HttpStatus> deleteTag(@PathVariable("id") long id) {
         this.tagService.deleteTag(id);
         return ResponseEntity.ok().build();

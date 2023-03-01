@@ -3,7 +3,7 @@ package it.tai.springpostresqljpa.springpostresqljpa.services.dto.tagsDTO;
 import lombok.Data;
 
 @Data
-public class UpdateTagRequestDTO
+public class TagRequestDTO
 {
     private String name;
 }

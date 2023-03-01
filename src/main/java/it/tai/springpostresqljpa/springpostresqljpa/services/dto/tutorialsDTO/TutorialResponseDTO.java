@@ -1,7 +1,6 @@
 package it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO;
 
 import it.tai.springpostresqljpa.springpostresqljpa.domain.TagEntity;
-import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tagsDTO.TagsResponseDTO;
 import lombok.Builder;
 import lombok.Data;
 
