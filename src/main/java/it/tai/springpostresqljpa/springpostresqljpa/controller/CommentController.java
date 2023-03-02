@@ -1,10 +1,13 @@
 package it.tai.springpostresqljpa.springpostresqljpa.controller;
 
-import io.swagger.v3.oas.annotations.Hidden;
-import it.tai.springpostresqljpa.springpostresqljpa.exceptions.ResourceNotFoundException;
-import it.tai.springpostresqljpa.springpostresqljpa.domain.CommentEntity;
-import it.tai.springpostresqljpa.springpostresqljpa.repository.CommentRepository;
-import it.tai.springpostresqljpa.springpostresqljpa.repository.TutorialRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import it.tai.springpostresqljpa.springpostresqljpa.exceptions.ErrorMessage;
+import it.tai.springpostresqljpa.springpostresqljpa.services.CommentService;
+import it.tai.springpostresqljpa.springpostresqljpa.services.dto.commentsDTO.CommentRequestDTO;
+import it.tai.springpostresqljpa.springpostresqljpa.services.dto.commentsDTO.CommentResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,59 +18,118 @@ import java.util.List;
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
-@Hidden
 public class CommentController
 {
     @Autowired
-    private TutorialRepository tutorialRepository;
-    @Autowired
-    CommentRepository commentRepository;
+    private CommentService commentService;
 
     @GetMapping("/tutorials/{tutorialId}/comments")
-    public ResponseEntity<List<CommentEntity>> getAllCommentsByTutorialId(@PathVariable(value = "tutorialId") long tutorialId)
+    @Operation(summary = "Restituisce tutti i Commenti di un certo Tutorial")
+    @ApiResponse(responseCode = "200",
+                 description = "Successo",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommentResponseDTO.class,
+                                    type = "array")))
+    @ApiResponse(responseCode = "404",
+                 description = "Nessun Tutorial trovato | Nessun Commento trovato",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    @ApiResponse(responseCode = "500",
+                 description = "Errore interno del Server",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    public ResponseEntity<List<CommentResponseDTO>> getAllCommentsByTutorialId(@PathVariable(value = "tutorialId") long tutorialId)
     {
-        if(!tutorialRepository.existsById(tutorialId))
-            throw new ResourceNotFoundException("Not found Tutorial with id "+ tutorialId);
-        List<CommentEntity> commentEntities = commentRepository.findByTutorialId(tutorialId);
-        return new ResponseEntity<>(commentEntities, HttpStatus.OK);
+        List<CommentResponseDTO> comments = commentService.listCommentsByTutorial(tutorialId);
+        return ResponseEntity.ok(comments);
     }
 
-    @GetMapping("/comments/{id}")
-    public ResponseEntity<CommentEntity> getCommentsByTutorialId(@PathVariable(value = "id") Long id) {
-        CommentEntity commentEntity = commentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Comment with id = " + id));
-        return new ResponseEntity<>(commentEntity, HttpStatus.OK);
+    @GetMapping("/comments/{commentId}")
+    @Operation(summary = "Restituisce un commento")
+    @ApiResponse(responseCode = "200",
+                 description = "Successo",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommentResponseDTO.class)))
+    @ApiResponse(responseCode = "404",
+                 description = "Nessun Commento trovato",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    @ApiResponse(responseCode = "500",
+                 description = "Errore interno del Server",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    public ResponseEntity<CommentResponseDTO> getCommentsById(@PathVariable(value = "commentId") Long commentId) {
+        CommentResponseDTO comment = commentService.getCommentById(commentId);
+        return ResponseEntity.ok(comment);
     }
 
     @PostMapping("/tutorials/{tutorialId}/comments")
-    public ResponseEntity<CommentEntity> createComment(@PathVariable(value = "tutorialId") long tutorialId, @RequestBody CommentEntity commentEntityRequest)
+    @Operation(summary = "Crea un nuovo Commento per un Tutorial")
+    @ApiResponse(responseCode = "201",
+                 description = "Successo",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommentResponseDTO.class)))
+    @ApiResponse(responseCode = "404",
+                 description = "Nessun Tutorial trovato",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    @ApiResponse(responseCode = "500",
+                 description = "Errore interno del Server",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    public ResponseEntity<CommentResponseDTO> createComment(@PathVariable(value = "tutorialId") long tutorialId, @RequestBody CommentRequestDTO request)
     {
-        CommentEntity commentEntity = tutorialRepository.findById(tutorialId).map(tutorial ->
-        {
-            commentEntityRequest.setTutorial(tutorial);
-            return commentRepository.save(commentEntityRequest);
-        }).orElseThrow(() -> new ResourceNotFoundException("Not found tutorial with id "+tutorialId));
-        return new ResponseEntity<>(commentEntity, HttpStatus.CREATED);
+        CommentResponseDTO comment = commentService.commentTutorial(tutorialId, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(comment);
     }
 
-    @PutMapping
-    public ResponseEntity<CommentEntity> updateComment(@PathVariable("id") long id, @RequestBody CommentEntity commentEntityRequest)
+    @PutMapping("/comments/{commentId}")
+    @Operation(summary = "Modifica un Commento di un Tutorial")
+    @ApiResponse(responseCode = "200",
+                 description = "Successo",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = CommentResponseDTO.class)))
+    @ApiResponse(responseCode = "404",
+                 description = "Nessun Tutorial trovato",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    @ApiResponse(responseCode = "500",
+                 description = "Errore interno del Server",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    public ResponseEntity<CommentResponseDTO> updateComment(@PathVariable("commentId") long commentId, @RequestBody CommentRequestDTO request)
     {
-        CommentEntity commentEntity = commentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("commentId "+id+" not found"));
-        commentEntity.setContent(commentEntityRequest.getContent());
-        return new ResponseEntity<>(commentRepository.save(commentEntity), HttpStatus.OK);
+        CommentResponseDTO comment = commentService.editComment(commentId, request);
+        return ResponseEntity.ok(comment);
     }
 
-    @DeleteMapping("/comments/{id}")
-    public ResponseEntity<HttpStatus> deleteComment(@PathVariable("id") long id) {
-        commentRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @DeleteMapping("/comments/{commentId}")
+    @Operation(summary = "Elimina un Commento")
+    @ApiResponse(responseCode = "200",
+                 description = "Successo",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = HttpStatus.class)))
+    @ApiResponse(responseCode = "500",
+                 description = "Errore interno del Server",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    public ResponseEntity<HttpStatus> deleteComment(@PathVariable("commentId") long commentId) {
+        commentService.deleteComment(commentId);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/tutorials/{tutorialId}/comments")
-    public ResponseEntity<List<CommentEntity>> deleteAllCommentsOfTutorial(@PathVariable(value = "tutorialId") Long tutorialId) {
-        if (!tutorialRepository.existsById(tutorialId))
-            throw new ResourceNotFoundException("Not found Tutorial with id = " + tutorialId);
-        commentRepository.deleteByTutorialId(tutorialId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @Operation(summary = "Elimina tutti i commenti di un Tutorial")
+    @ApiResponse(responseCode = "200",
+                 description = "Successo",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = HttpStatus.class)))
+    @ApiResponse(responseCode = "500",
+                 description = "Errore interno del Server",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
+    public ResponseEntity<HttpStatus> deleteAllCommentsOfTutorial(@PathVariable(value = "tutorialId") Long tutorialId) {
+        commentService.deleteAllComments(tutorialId);
+        return ResponseEntity.ok().build();
     }
 }

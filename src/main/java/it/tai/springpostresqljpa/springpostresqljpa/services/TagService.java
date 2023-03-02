@@ -92,7 +92,7 @@ public class TagService
         return tutorialMapper.toResponse(t);
     }
 
-    public void untagTutorial(long tutorialId, long tagId)
+    public TutorialResponseDTO untagTutorial(long tutorialId, long tagId)
     {
         Optional<TutorialEntity> tutorial = tutorialRepository.findById(tutorialId);
         if(tutorial.isEmpty())
@@ -100,6 +100,7 @@ public class TagService
         TutorialEntity t = tutorial.get();
         t.removeTag(tagId);
         tutorialRepository.saveAndFlush(t);
+        return tutorialMapper.toResponse(t);
     }
 
     public TagResponseDTO updateTagInfo(long tagId, TagRequestDTO request)

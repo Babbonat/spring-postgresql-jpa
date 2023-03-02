@@ -4,10 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import it.tai.springpostresqljpa.springpostresqljpa.domain.TutorialEntity;
 import it.tai.springpostresqljpa.springpostresqljpa.exceptions.ErrorMessage;
-import it.tai.springpostresqljpa.springpostresqljpa.mapper.TutorialMapper;
 import it.tai.springpostresqljpa.springpostresqljpa.services.TutorialService;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.CreateTutorialRequestDTO;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.CreateTutorialResponseDTO;
@@ -16,7 +13,6 @@ import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.Up
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -28,7 +24,7 @@ import java.util.*;
 public class TutorialController
 {
     @Autowired
-    TutorialService tutorialService;
+    private TutorialService tutorialService;
 
     @GetMapping("/tutorials")
     @Operation(summary = "Restituisce tutti i Tutorial")

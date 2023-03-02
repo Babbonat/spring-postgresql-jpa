@@ -53,7 +53,7 @@ public class TutorialService
         return tutorialMapper.toResponse(tutorial.get());
     }
 
-    public List<TutorialResponseDTO> listPublishedTutorils()
+    public List<TutorialResponseDTO> listPublishedTutorils()        //DA CHIEDERE perché non vengono listati i tags
     {
         List<TutorialEntity> tutorials = tutorialRepository.findByPublished(true);
         if(tutorials.isEmpty())
@@ -85,7 +85,7 @@ public class TutorialService
             throw new BadParameterException("request.title");
         if(request.getDescription() == null)
             throw new BadParameterException("request.description");
-        //controllo su published, renderlo String?
+        //controllo su published, renderlo String? DA CHIEDERE
         Optional<TutorialEntity> tutorial = tutorialRepository.findById(tutorialId);
         if(tutorial.isEmpty())
             throw new ResourceNotFoundException("tutorial not found", tutorialId);

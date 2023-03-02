@@ -104,7 +104,7 @@ public class TagController {
 
     @PostMapping("/tutorials/{tutorialId}/tags")
     @Operation(summary = "Aggiunge un nuovo Tag ad un certo Tutorial")
-    @ApiResponse(responseCode = "200",
+    @ApiResponse(responseCode = "201",
                  description = "Successo",
                  content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = TutorialResponseDTO.class)))
@@ -118,8 +118,8 @@ public class TagController {
                                     schema = @Schema(implementation = ErrorMessage.class)))
     public ResponseEntity<TutorialResponseDTO> addTag(@PathVariable(value = "tutorialId") long tutorialId, @RequestBody TagRequestDTO request)
     {
-        this.tagService.tagTutorial(tutorialId, request);
-        return ResponseEntity.ok().build();
+        TutorialResponseDTO response = tagService.tagTutorial(tutorialId, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/tags/{id}")
@@ -142,7 +142,8 @@ public class TagController {
                                     schema = @Schema(implementation = ErrorMessage.class)))
     public ResponseEntity<TagResponseDTO> updateTag(@PathVariable("id") long id, @RequestBody TagRequestDTO request)
     {
-        return ResponseEntity.ok(tagService.updateTagInfo(id, request));
+        TagResponseDTO response = tagService.updateTagInfo(id, request);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/tutorials/{tutorialId}/tags/{tagId}")
@@ -150,7 +151,7 @@ public class TagController {
     @ApiResponse(responseCode = "200",
                  description = "Successo",
                  content = @Content(mediaType = "application/json",
-                                     schema = @Schema(implementation = HttpStatus.class)))
+                                     schema = @Schema(implementation = TutorialResponseDTO.class)))
     @ApiResponse(responseCode = "404",
                  description = "Nessun Tutorial trovato",
                  content = @Content(mediaType = "application/json",
@@ -159,9 +160,9 @@ public class TagController {
                  description = "Errore interno del Server",
                  content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ErrorMessage.class)))
-    public ResponseEntity<HttpStatus> deleteTagFromTutorial(@PathVariable(value = "tutorialId") long tutorialId, @PathVariable(value = "tagId") Long tagId) {
-        this.tagService.untagTutorial(tutorialId, tagId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<TutorialResponseDTO> deleteTagFromTutorial(@PathVariable(value = "tutorialId") long tutorialId, @PathVariable(value = "tagId") Long tagId) {
+        TutorialResponseDTO response = tagService.untagTutorial(tutorialId, tagId);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/tags/{tagId}")
