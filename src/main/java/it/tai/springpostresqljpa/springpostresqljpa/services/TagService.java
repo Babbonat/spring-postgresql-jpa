@@ -13,6 +13,7 @@ import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.Tu
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tagsDTO.TagResponseDTO;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
