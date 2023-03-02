@@ -99,7 +99,8 @@ public class TutorialService
 
     public void deleteTutorial(long tutorialId)
     {
-        tutorialRepository.deleteById(tutorialId);
+        if(tutorialRepository.existsById(tutorialId))
+            tutorialRepository.deleteById(tutorialId);
     }
 
     public void deleteAllTutorials()

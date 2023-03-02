@@ -4,12 +4,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import it.tai.springpostresqljpa.springpostresqljpa.domain.TagEntity;
 import it.tai.springpostresqljpa.springpostresqljpa.exceptions.ErrorMessage;
 import it.tai.springpostresqljpa.springpostresqljpa.services.TagService;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tagsDTO.TagRequestDTO;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tagsDTO.TagResponseDTO;
-import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.CreateTutorialResponseDTO;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.TutorialResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -166,7 +164,7 @@ public class TagController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/tags/{id}")
+    @DeleteMapping("/tags/{tagId}")
     @Operation(summary = "Elimina un Tutorial")
     @ApiResponse(responseCode = "200",
                  description = "Successo",
@@ -176,8 +174,8 @@ public class TagController {
                  description = "Errore interno del Server",
                  content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ErrorMessage.class)))
-    public ResponseEntity<HttpStatus> deleteTag(@PathVariable("id") long id) {
-        this.tagService.deleteTag(id);
+    public ResponseEntity<HttpStatus> deleteTag(@PathVariable("tagId") long tagId) {
+        this.tagService.deleteTag(tagId);
         return ResponseEntity.ok().build();
     }
 }

@@ -118,9 +118,14 @@ public class TagService
         return tagMapper.toResponse(response);
     }
 
-    public void deleteTag(long tagId)
+    public void deleteTag(long tagId)       //DA CHIEDERE
     {
-        tagRepository.deleteById(tagId);
+        Optional<TagEntity> tag = tagRepository.findById(tagId);
+        if(tag.isPresent()) {
+            List<TutorialEntity> tutorials = tutorialRepository.findAll();
+            tutorials.forEach(tutorial -> tutorial.getTags().remove(tag.get()));
+            tagRepository.deleteById(tagId);
+        }
     }
 
     private TagEntity ensureTag(String tagName)
