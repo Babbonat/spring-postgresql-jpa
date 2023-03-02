@@ -8,6 +8,6 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface CommentMapper
 {
-    public CommentResponseDTO toResponse(CommentEntity entity);
-    public CommentEntity toEntity(CommentRequestDTO request);
+    CommentResponseDTO toResponse(CommentEntity entity);
+    CommentEntity toEntity(CommentRequestDTO request);
 }

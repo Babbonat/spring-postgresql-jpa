@@ -30,6 +30,10 @@ public class CommentController
                  content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = CommentResponseDTO.class,
                                     type = "array")))
+    @ApiResponse(responseCode = "400",
+                 description = "Richiesta errata",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
     @ApiResponse(responseCode = "404",
                  description = "Nessun Tutorial trovato | Nessun Commento trovato",
                  content = @Content(mediaType = "application/json",
@@ -50,6 +54,10 @@ public class CommentController
                  description = "Successo",
                  content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = CommentResponseDTO.class)))
+    @ApiResponse(responseCode = "400",
+                 description = "Richiesta errata",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
     @ApiResponse(responseCode = "404",
                  description = "Nessun Commento trovato",
                  content = @Content(mediaType = "application/json",
@@ -69,6 +77,10 @@ public class CommentController
                  description = "Successo",
                  content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = CommentResponseDTO.class)))
+    @ApiResponse(responseCode = "400",
+                 description = "Richiesta errata",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
     @ApiResponse(responseCode = "404",
                  description = "Nessun Tutorial trovato",
                  content = @Content(mediaType = "application/json",
@@ -89,6 +101,10 @@ public class CommentController
                  description = "Successo",
                  content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = CommentResponseDTO.class)))
+    @ApiResponse(responseCode = "400",
+                 description = "Richiesta errata",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
     @ApiResponse(responseCode = "404",
                  description = "Nessun Tutorial trovato",
                  content = @Content(mediaType = "application/json",

@@ -20,5 +20,5 @@ public class TutorialDetailsEntity
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "tutorial_id")
-    private TutorialEntity tutorialId;
+    private TutorialEntity tutorial;
 }

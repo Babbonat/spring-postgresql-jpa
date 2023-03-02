@@ -24,10 +24,10 @@ import java.util.Optional;
 public class TutorialService
 {
     @Autowired
-    TutorialRepository tutorialRepository;
+    private TutorialRepository tutorialRepository;
 
     @Autowired
-    TutorialMapper tutorialMapper;
+    private TutorialMapper tutorialMapper;
 
     public List<TutorialResponseDTO> listTutorials(String title)
     {

@@ -54,6 +54,10 @@ public class TagController {
                  description = "Nessun Tag trovato",
                  content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ErrorMessage.class)))
+    @ApiResponse(responseCode = "400",
+                 description = "Richiesta errata",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
     @ApiResponse(responseCode = "500",
                  description = "Errore interno del Server",
                  content = @Content(mediaType = "application/json",
@@ -69,6 +73,10 @@ public class TagController {
                  content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = TagResponseDTO.class,
                                     type = "array")))
+    @ApiResponse(responseCode = "400",
+                 description = "Richiesta errata",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
     @ApiResponse(responseCode = "404",
                  description = "Nessun Tag trovato | Nessun Tutorial trovato",
                  content = @Content(mediaType = "application/json",
@@ -89,6 +97,10 @@ public class TagController {
                  content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = TutorialResponseDTO.class,
                                     type = "array")))
+    @ApiResponse(responseCode = "400",
+                 description = "Richiesta errata",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
     @ApiResponse(responseCode = "404",
                  description = "Nessun Tag trovato | Nessun Tutorial trovato",
                  content = @Content(mediaType = "application/json",
@@ -108,6 +120,10 @@ public class TagController {
                  description = "Successo",
                  content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = TutorialResponseDTO.class)))
+    @ApiResponse(responseCode = "400",
+                 description = "Richiesta errata",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
     @ApiResponse(responseCode = "404",
                  description = "Nessun Tutorial trovato",
                  content = @Content(mediaType = "application/json",
@@ -152,6 +168,10 @@ public class TagController {
                  description = "Successo",
                  content = @Content(mediaType = "application/json",
                                      schema = @Schema(implementation = TutorialResponseDTO.class)))
+    @ApiResponse(responseCode = "400",
+                 description = "Richiesta errata",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
     @ApiResponse(responseCode = "404",
                  description = "Nessun Tutorial trovato",
                  content = @Content(mediaType = "application/json",
@@ -171,6 +191,10 @@ public class TagController {
                  description = "Successo",
                  content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = HttpStatus.class)))
+    @ApiResponse(responseCode = "400",
+                 description = "Richiesta errata",
+                 content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessage.class)))
     @ApiResponse(responseCode = "500",
                  description = "Errore interno del Server",
                  content = @Content(mediaType = "application/json",

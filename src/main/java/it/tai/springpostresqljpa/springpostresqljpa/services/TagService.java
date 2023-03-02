@@ -47,6 +47,8 @@ public class TagService
 
     public TagResponseDTO getTag(long tagId)
     {
+        if(tagId < 0)
+            throw new BadParameterException("tagId");
         Optional<TagEntity> tag = tagRepository.findById(tagId);
         if(tag.isEmpty())
             throw new ResourceNotFoundException("tag not found", tagId);
@@ -56,6 +58,8 @@ public class TagService
 
     public List<TutorialResponseDTO> getTutorialsByTagName(String tagName)
     {
+        if(tagName == null)
+            throw new BadParameterException("tagName");
         Optional<TagEntity> tag = tagRepository.findByName(tagName);
         if(tag.isEmpty())
             throw new ResourceNotFoundException("tag not found", tagName);
@@ -69,6 +73,8 @@ public class TagService
 
     public List<TagResponseDTO> getTagsByTutorialId(long tutorialId)
     {
+        if(tutorialId < 0)
+            throw new BadParameterException("tutorialId");
         if(!tutorialRepository.existsById(tutorialId))
             throw new ResourceNotFoundException("tutorial not found", tutorialId);
         List<TagEntity> tags = tagRepository.findTagsByTutorialsId(tutorialId);
@@ -81,6 +87,12 @@ public class TagService
 
     public TutorialResponseDTO tagTutorial(long tutorialId, TagRequestDTO request)
     {
+        if(tutorialId < 0)
+            throw new BadParameterException("tutorialId");
+        if(request == null)
+            throw new BadParameterException("request");
+        if(request.getName() == null)
+            throw new BadParameterException("request.name");
         Optional<TutorialEntity> tutorial = tutorialRepository.findById(tutorialId);
         if(tutorial.isEmpty())
             throw new ResourceNotFoundException("tutorial not found", tutorialId);
@@ -94,6 +106,10 @@ public class TagService
 
     public TutorialResponseDTO untagTutorial(long tutorialId, long tagId)
     {
+        if(tutorialId < 0)
+            throw new BadParameterException("tutorialId");
+        if(tagId < 0)
+            throw new BadParameterException("tagId");
         Optional<TutorialEntity> tutorial = tutorialRepository.findById(tutorialId);
         if(tutorial.isEmpty())
             throw new ResourceNotFoundException("tutorial not found", tutorialId);
@@ -105,6 +121,8 @@ public class TagService
 
     public TagResponseDTO updateTagInfo(long tagId, TagRequestDTO request)
     {
+        if(tagId < 0)
+            throw new BadParameterException("tagId");
         if(request == null)
             throw new BadParameterException("request");
         if(request.getName() == null)
@@ -119,8 +137,10 @@ public class TagService
         return tagMapper.toResponse(response);
     }
 
-    public void deleteTag(long tagId)       //DA CHIEDERE
+    public void deleteTag(long tagId)
     {
+        if(tagId < 0)
+            throw new BadParameterException("tagId");
         Optional<TagEntity> tag = tagRepository.findById(tagId);
         if(tag.isPresent()) {
             List<TutorialEntity> tutorials = tutorialRepository.findAll();

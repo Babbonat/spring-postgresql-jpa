@@ -2,6 +2,7 @@ package it.tai.springpostresqljpa.springpostresqljpa.services;
 
 import it.tai.springpostresqljpa.springpostresqljpa.domain.CommentEntity;
 import it.tai.springpostresqljpa.springpostresqljpa.domain.TutorialEntity;
+import it.tai.springpostresqljpa.springpostresqljpa.exceptions.BadParameterException;
 import it.tai.springpostresqljpa.springpostresqljpa.exceptions.ResourceNotFoundException;
 import it.tai.springpostresqljpa.springpostresqljpa.mapper.CommentMapper;
 import it.tai.springpostresqljpa.springpostresqljpa.repository.CommentRepository;
@@ -30,6 +31,8 @@ public class CommentService
 
     public List<CommentResponseDTO> listCommentsByTutorial(long tutorialId)
     {
+        if(tutorialId < 0)
+            throw new BadParameterException("tutorialId");
         if(!tutorialRepository.existsById(tutorialId))
             throw new ResourceNotFoundException("tutorial not found", tutorialId);
         List<CommentEntity> comments = commentRepository.findByTutorialId(tutorialId);
@@ -42,6 +45,8 @@ public class CommentService
 
     public CommentResponseDTO getCommentById(long commentId)
     {
+        if(commentId < 0)
+            throw new BadParameterException("commentId");
         Optional<CommentEntity> comment = commentRepository.findById(commentId);
         if(comment.isEmpty())
             throw new ResourceNotFoundException("comment not found", commentId);
@@ -50,6 +55,12 @@ public class CommentService
 
     public CommentResponseDTO commentTutorial(long tutorialId, CommentRequestDTO request)
     {
+        if(tutorialId < 0)
+            throw new BadParameterException("tutorialId");
+        if(request == null)
+            throw new BadParameterException("request");
+        if(request.getContent() == null)
+            throw new BadParameterException("request.content");
         Optional<TutorialEntity> tutorial = tutorialRepository.findById(tutorialId);
         if(tutorial.isEmpty())
             throw new ResourceNotFoundException("tutorial not found", tutorialId);
@@ -61,6 +72,12 @@ public class CommentService
 
     public CommentResponseDTO editComment(long commentId, CommentRequestDTO request)
     {
+        if(commentId < 0)
+            throw new BadParameterException("commentId");
+        if(request == null)
+            throw new BadParameterException("request");
+        if(request.getContent() == null)
+            throw new BadParameterException("request.content");
         Optional<CommentEntity> commentToUpdate = commentRepository.findById(commentId);
         if(commentToUpdate.isEmpty())
             throw new ResourceNotFoundException("comment not found", commentId);
