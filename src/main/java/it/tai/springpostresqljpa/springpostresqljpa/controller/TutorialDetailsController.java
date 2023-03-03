@@ -1,27 +1,18 @@
 package it.tai.springpostresqljpa.springpostresqljpa.controller;
 
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import it.tai.springpostresqljpa.springpostresqljpa.exceptions.ErrorMessage;
-import it.tai.springpostresqljpa.springpostresqljpa.exceptions.ResourceNotFoundException;
-import it.tai.springpostresqljpa.springpostresqljpa.domain.TutorialEntity;
 import it.tai.springpostresqljpa.springpostresqljpa.domain.TutorialDetailsEntity;
-import it.tai.springpostresqljpa.springpostresqljpa.repository.TutorialDetailsRepository;
-import it.tai.springpostresqljpa.springpostresqljpa.repository.TutorialRepository;
 import it.tai.springpostresqljpa.springpostresqljpa.services.TutorialDetailsService;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialDetailsDTO.TDRequestDTO;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialDetailsDTO.TDResponseDTO;
-import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.CreateTutorialResponseDTO;
-import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.TutorialResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -29,7 +20,7 @@ import java.util.Date;
 public class TutorialDetailsController
 {
     @Autowired
-    private TutorialDetailsService service;
+    private TutorialDetailsService detailsService;
 
     @GetMapping({"/details/{id}", "/tutorials/{id}/details"})
     @Operation(summary = "Restituisce tutti i TutorialDetails")
@@ -51,7 +42,7 @@ public class TutorialDetailsController
                                     schema = @Schema(implementation = ErrorMessage.class)))
     public ResponseEntity<TDResponseDTO> getDetailsById(@PathVariable(value = "id") long id)
     {
-        TDResponseDTO details = service.getDetailsById(id);
+        TDResponseDTO details = detailsService.getDetailsById(id);
         return ResponseEntity.ok(details);
 
         /*TutorialDetailsEntity details = detailsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found TutotialDetails with id "+id));
@@ -78,7 +69,7 @@ public class TutorialDetailsController
                                     schema = @Schema(implementation = ErrorMessage.class)))
     public ResponseEntity<TDResponseDTO> createDetails(@PathVariable(value = "tutorialId") long tutorialId, @RequestBody TDRequestDTO request)
     {
-        TDResponseDTO details = service.createDetails(tutorialId, request);
+        TDResponseDTO details = detailsService.createDetails(tutorialId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(details);
 
         /*TutorialEntity t = tutorialRepository.findById(tutorialId).orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id "+ tutorialId));
@@ -108,7 +99,7 @@ public class TutorialDetailsController
                                     schema = @Schema(implementation = ErrorMessage.class)))
     public ResponseEntity<TDResponseDTO> updateDetails(@PathVariable("id") long id, @RequestBody TDRequestDTO request)
     {
-        TDResponseDTO details = service.updateDetails(id, request);
+        TDResponseDTO details = detailsService.updateDetails(id, request);
         return ResponseEntity.ok(details);
 
         /*TutorialDetailsEntity details = detailsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Id "+id+" not found"));
@@ -128,7 +119,7 @@ public class TutorialDetailsController
                                     schema = @Schema(implementation = ErrorMessage.class)))
     public ResponseEntity<HttpStatus> deleteDetails(@PathVariable("id") long id)
     {
-        service.deleteDetails(id);
+        detailsService.deleteDetails(id);
         return ResponseEntity.ok().build();
 
         /*detailsRepository.deleteById(id);
@@ -151,7 +142,7 @@ public class TutorialDetailsController
                                     schema = @Schema(implementation = ErrorMessage.class)))
     public ResponseEntity<TutorialDetailsEntity> deleteDetailsOfTutorial(@PathVariable(value = "tutorialId") long tutorialId)
     {
-        service.deleteTutorialDetails(tutorialId);
+        detailsService.deleteTutorialDetails(tutorialId);
         return ResponseEntity.ok().build();
 
         /*if(!tutorialRepository.existsById(tutorialId))

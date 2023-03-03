@@ -25,18 +25,18 @@ public class TutorialDetailsService
     @Autowired
     private TutorialRepository tutorialRepository;
     @Autowired
-    private TutorialDetailsRepository repository;
+    private TutorialDetailsRepository detailsRepository;
     @Autowired
-    private TutorialDetailsMapper mapper;
+    private TutorialDetailsMapper detailsMapper;
 
     public TDResponseDTO getDetailsById(long id)
     {
         if(id < 0)
             throw new BadParameterException("id");
-        Optional<TutorialDetailsEntity> details = repository.findById(id);
+        Optional<TutorialDetailsEntity> details = detailsRepository.findById(id);
         if(details.isEmpty())
             throw new ResourceNotFoundException("details not found", id);
-        return mapper.toResponse(details.get());
+        return detailsMapper.toResponse(details.get());
     }
 
     public TDResponseDTO createDetails(long tutorialId, TDRequestDTO request)
@@ -50,11 +50,11 @@ public class TutorialDetailsService
         Optional<TutorialEntity> tutorial = tutorialRepository.findById(tutorialId);
         if(tutorial.isEmpty())
             throw new ResourceNotFoundException("tutorial not found", tutorialId);
-        TutorialDetailsEntity details = mapper.toEntity(request);
+        TutorialDetailsEntity details = detailsMapper.toEntity(request);
         details.setCreatedOn(new Date());
         details.setTutorial(tutorial.get());
-        repository.saveAndFlush(details);
-        return mapper.toResponse(details);
+        detailsRepository.saveAndFlush(details);
+        return detailsMapper.toResponse(details);
     }
 
     public TDResponseDTO updateDetails(long id, TDRequestDTO request)
@@ -65,25 +65,25 @@ public class TutorialDetailsService
             throw new BadParameterException("request");
         if(request.getCreatedBy() == null)
             throw new BadParameterException("request.createdBy");
-        Optional<TutorialDetailsEntity> detailsToUpdate = repository.findById(id);
+        Optional<TutorialDetailsEntity> detailsToUpdate = detailsRepository.findById(id);
         if(detailsToUpdate.isEmpty())
             throw new ResourceNotFoundException("details not found", id);
-        TutorialDetailsEntity details = mapper.toEntity(request);
+        TutorialDetailsEntity details = detailsMapper.toEntity(request);
         detailsToUpdate.get().setCreatedBy(details.getCreatedBy());
-        repository.saveAndFlush(detailsToUpdate.get());
-        return mapper.toResponse(detailsToUpdate.get());
+        detailsRepository.saveAndFlush(detailsToUpdate.get());
+        return detailsMapper.toResponse(detailsToUpdate.get());
     }
 
     public void deleteDetails(long id)
     {
-        if(repository.existsById(id))
-            repository.deleteById(id);
+        if(detailsRepository.existsById(id))
+            detailsRepository.deleteById(id);
     }
 
     public void deleteTutorialDetails(long tutorialId)
     {
         if(!tutorialRepository.existsById(tutorialId))
             throw new ResourceNotFoundException("tutorial not found", tutorialId);
-        repository.deleteByTutorialId(tutorialId);
+        detailsRepository.deleteByTutorialId(tutorialId);
     }
 }
