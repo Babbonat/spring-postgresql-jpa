@@ -1,7 +1,6 @@
 package it.tai.springpostresqljpa.springpostresqljpa.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,7 +1,5 @@
 package it.tai.springpostresqljpa.springpostresqljpa.exceptions;
 
-import lombok.Data;
-
 public class ResourceNotFoundException extends RuntimeException
 {
     private static final long serialVersionUID = 1L;

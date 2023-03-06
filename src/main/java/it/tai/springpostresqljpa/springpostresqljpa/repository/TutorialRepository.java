@@ -11,6 +11,5 @@ public interface TutorialRepository extends JpaRepository<TutorialEntity, Long>
 {
     List<TutorialEntity> findByPublished(boolean published);
     List<TutorialEntity> findByTitleContaining(String title);
-    List<TutorialEntity> findTutorialsByTagsId(Long tagId);
     List<TutorialEntity> findTutorialsByTagsName(String tagName);
 }

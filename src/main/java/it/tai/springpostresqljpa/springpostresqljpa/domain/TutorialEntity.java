@@ -3,10 +3,8 @@ package it.tai.springpostresqljpa.springpostresqljpa.domain;
 //corrisponde a entità e tabelle
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.HashSet;
 import java.util.Set;
 
