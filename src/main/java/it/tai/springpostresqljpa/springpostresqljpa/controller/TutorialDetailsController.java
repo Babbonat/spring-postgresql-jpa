@@ -44,9 +44,6 @@ public class TutorialDetailsController
     {
         TDResponseDTO details = detailsService.getDetailsById(id);
         return ResponseEntity.ok(details);
-
-        /*TutorialDetailsEntity details = detailsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found TutotialDetails with id "+id));
-        return new ResponseEntity<>(details, HttpStatus.OK);*/
     }
 
     @PostMapping("/tutorials/{tutorialId}/details")
@@ -71,12 +68,6 @@ public class TutorialDetailsController
     {
         TDResponseDTO details = detailsService.createDetails(tutorialId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(details);
-
-        /*TutorialEntity t = tutorialRepository.findById(tutorialId).orElseThrow(() -> new ResourceNotFoundException("Not found Tutorial with id "+ tutorialId));
-        detailsRequest.setCreatedOn(new Date());
-        detailsRequest.setTutorial(t);
-        TutorialDetailsEntity details = detailsRepository.save(detailsRequest);
-        return new ResponseEntity<>(details, HttpStatus.CREATED);*/
     }
 
     @PutMapping("/details/{id}")
@@ -101,10 +92,6 @@ public class TutorialDetailsController
     {
         TDResponseDTO details = detailsService.updateDetails(id, request);
         return ResponseEntity.ok(details);
-
-        /*TutorialDetailsEntity details = detailsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Id "+id+" not found"));
-        details.setCreatedBy(detailsRequest.getCreatedBy());
-        return new ResponseEntity<>(detailsRepository.save(details), HttpStatus.OK);*/
     }
 
     @DeleteMapping("/details/{id}")
@@ -121,9 +108,6 @@ public class TutorialDetailsController
     {
         detailsService.deleteDetails(id);
         return ResponseEntity.ok().build();
-
-        /*detailsRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);*/
     }
 
     @DeleteMapping("/tutorials/{tutorialId}/details")
@@ -144,10 +128,5 @@ public class TutorialDetailsController
     {
         detailsService.deleteTutorialDetails(tutorialId);
         return ResponseEntity.ok().build();
-
-        /*if(!tutorialRepository.existsById(tutorialId))
-            throw new ResourceNotFoundException("Not found Tutorial with id "+tutorialId);
-        detailsRepository.deleteByTutorialId(tutorialId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);*/
     }
 }
