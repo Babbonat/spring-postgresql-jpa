@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/tutorialsdb
+    password: password
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${OAUTH2_SERVER:http://localhost:8083}/auth/realms/springdoc
+          jwk-set-uri: ${OAUTH2_SERVER:http://localhost:8083}/auth/realms/springdoc/protocol/openid-connect/certs
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: 'true'
+    hibernate:
+      ddl-auto: update
+    show-sql: 'true'
+  jp:
+    properties:
+      hibernate:
+        format_sql: 'true'
+springdoc:
+  api-docs:
+    enabled: 'true'
+  version: '@springdoc.version@'
+  swagger-ui:
+    use-root-path: 'true'
