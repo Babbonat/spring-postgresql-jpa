@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import it.tai.springpostresqljpa.springpostresqljpa.exceptions.ErrorMessage;
 import it.tai.springpostresqljpa.springpostresqljpa.services.TagService;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tagsDTO.TagRequestDTO;
@@ -19,6 +20,7 @@ import java.util.List;
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
+@SecurityRequirement(name = "security_auth")
 public class TagController {
     @Autowired
     private TagService tagService;

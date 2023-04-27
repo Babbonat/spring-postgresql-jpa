@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import it.tai.springpostresqljpa.springpostresqljpa.exceptions.ErrorMessage;
 import it.tai.springpostresqljpa.springpostresqljpa.services.TutorialService;
 import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.CreateTutorialRequestDTO;
@@ -13,6 +14,8 @@ import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.Up
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -21,12 +24,14 @@ import java.util.*;
 @CrossOrigin(origins="*")
 @RestController
 @RequestMapping("/api")
+@SecurityRequirement(name = "security_auth")
 public class TutorialController
 {
     @Autowired
     private TutorialService tutorialService;
 
     @GetMapping("/tutorials")
+    @PreAuthorize("hasAuthority('SCOPE_profile')")
     @Operation(summary = "Restituisce tutti i Tutorial")
     @ApiResponse(responseCode = "200",
                  description = "Successo",

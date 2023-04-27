@@ -7,8 +7,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${OAUTH2_SERVER:http://localhost:8083}/auth/realms/springdoc
-          jwk-set-uri: ${OAUTH2_SERVER:http://localhost:8083}/auth/realms/springdoc/protocol/openid-connect/certs
+          issuer-uri:  https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_BikMDdbAt
+          jwk-set-uri:  https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_BikMDdbAt/.well-known/jwks.json
   jpa:
     properties:
       hibernate:
@@ -29,3 +29,9 @@ springdoc:
   version: '@springdoc.version@'
   swagger-ui:
     use-root-path: 'true'
+    oauth:
+      clientId: newClient
+      clientSecret: newClientSecret
+  oAuthFlow:
+    authorizationUrl: ${OAUTH2_SERVER:http://localhost:8083}/auth/realms/springdoc/protocol/openid-connect/auth
+    tokenUrl: ${OAUTH2_SERVER:http://localhost:8083}/auth/realms/springdoc/protocol/openid-connect/token

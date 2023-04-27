@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import it.tai.springpostresqljpa.springpostresqljpa.exceptions.ErrorMessage;
 import it.tai.springpostresqljpa.springpostresqljpa.domain.TutorialDetailsEntity;
 import it.tai.springpostresqljpa.springpostresqljpa.services.TutorialDetailsService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
+@SecurityRequirement(name = "security_auth")
 public class TutorialDetailsController
 {
     @Autowired
