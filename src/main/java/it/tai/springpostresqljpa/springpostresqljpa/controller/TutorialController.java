@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -25,13 +24,14 @@ import java.util.*;
 @RestController
 @RequestMapping("/api")
 @SecurityRequirement(name = "security_auth")
+@Secured("SCOPE_api/web")
 public class TutorialController
 {
     @Autowired
     private TutorialService tutorialService;
 
     @GetMapping("/tutorials")
-    @PreAuthorize("hasAuthority('SCOPE_profile')")
+    @Secured("ROLE_ADMIN")
     @Operation(summary = "Restituisce tutti i Tutorial")
     @ApiResponse(responseCode = "200",
                  description = "Successo",
@@ -49,6 +49,7 @@ public class TutorialController
     public ResponseEntity<List<TutorialResponseDTO>> getAllTutorials(@RequestParam(required = false) String title)
     {
         List<TutorialResponseDTO> tutorials = tutorialService.listTutorials(title);
+        //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return ResponseEntity.ok(tutorials);
     }
 

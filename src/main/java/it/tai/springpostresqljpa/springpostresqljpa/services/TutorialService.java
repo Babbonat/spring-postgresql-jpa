@@ -12,6 +12,7 @@ import it.tai.springpostresqljpa.springpostresqljpa.services.dto.tutorialsDTO.Up
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,7 @@ public class TutorialService
         return tutorialMapper.toResponse(tutorial.get());
     }
 
-    public List<TutorialResponseDTO> listPublishedTutorils()        //DA CHIEDERE perché non vengono listati i tags
+    public List<TutorialResponseDTO> listPublishedTutorils()
     {
         List<TutorialEntity> tutorials = tutorialRepository.findByPublished(true);
         if(tutorials.isEmpty())

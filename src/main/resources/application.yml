@@ -9,6 +9,14 @@ spring:
         jwt:
           issuer-uri:  https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_BikMDdbAt
           jwk-set-uri:  https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_BikMDdbAt/.well-known/jwks.json
+  client:
+    registration:
+      cognito:
+        token-uri: https://dev-nps-cloud.auth.eu-west-1.amazoncognito.com/oauth2/token
+        client-id: 70vq31jh4m1mlub0biv7r5bnjm
+        client-secret: ak04i84fkk0m5rh5chtft6c05tdcsac1a2i5551vvah3q7qssrt
+        authorization-grant-type: client_credentials
+        scope: openid api/web
   jpa:
     properties:
       hibernate:
